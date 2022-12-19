@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>IC2 Crop Growth Analysis</title>
+    <link rel="stylesheet" href="style.css" />
+    <script type="module" src="dist/main.js"></script>
+</head>
+<body>
+    <div class="crop-stats">
+        <div>
+            Crop tier:
+            <input type="number" id="cropTier" min="0" max="16" value="1" />
+        </div>
+        <div>
+            Growth:
+            <input type="number" id="statGrowth" min="0" max="31" value="1" />
+        </div>
+        <div>
+            Gain:
+            <input type="number" id="statGain" min="0" max="31" value="1" />
+        </div>
+        <div>
+            Resistance:
+            <input type="number" id="statResistance" min="0" max="31" value="1" />
+        </div>
+    </div>
+    <div class="crop-info">
+        <div> Environmental needs:
+            <div id="env-needs">0</div>
+        </div>
+    </div>
+</body>

@@ -1,0 +1,13 @@
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.crop-stats {
+    display: flex;
+    flex-direction: column;
+}
+
+.crop-info div {
+    display: inline-block;
+}
