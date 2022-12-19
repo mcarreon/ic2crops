@@ -7,7 +7,7 @@
     <script type="module" src="dist/main.js"></script>
 </head>
 <body>
-    <div class="crop-stats">
+    <div class="crop-data">
         <div>
             Crop tier:
             <input type="number" id="cropTier" min="0" max="16" value="1" />
@@ -24,10 +24,26 @@
             Resistance:
             <input type="number" id="statResistance" min="0" max="31" value="1" />
         </div>
+        <div>
+            Biome Humidity Bonus:
+            <input type="number" id="biomeHumidityBonus" min="-10" max="10" value="0" />
+        </div>
+        <div>
+            Is the crop constantly hydrated?
+            <input type="checkbox" id="hydrated" />
+        </div>
+        <div>
+            Does the crop sits atop hydrated farmland?
+            <input type="checkbox" id="atopHydratedFarmland" />
+        </div>
     </div>
+
     <div class="crop-info">
         <div> Environmental needs:
             <div id="env-needs">0</div>
+        </div>
+        <div> Humidity value:
+            <div id="humidity">0</div>
         </div>
     </div>
 </body>

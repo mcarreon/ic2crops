@@ -1,9 +1,16 @@
 body {
     display: flex;
     flex-direction: column;
+    gap: 1em;
+    padding: 1em;
 }
 
-.crop-stats {
+.crop-data {
+    display: flex;
+    flex-direction: column;
+}
+
+.crop-info {
     display: flex;
     flex-direction: column;
 }
