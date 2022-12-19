@@ -61,6 +61,22 @@ export class StaticCropData {
      */
     fertilized: boolean = false;
 
+    /* Y value of the crop block.
+     */
+    yValue: number = 0;
+
+    /* Number of nearby blocks which are air blocks. This number is always between 0 and 8.
+     *
+     * "nearby" means the 8 blocks closest to the crop with the same Y value
+     * (i.e. all blocks in a 3x1x3 rectangle centered at the crop,
+     * excluding the crop itself).
+     */
+    surroundingAirBlocks: number = 0;
+
+    /* Whether the block immediately above the crop can see the sky.
+     */
+    skyAccess: boolean = false;
+
     computeEnvironmentalNeeds() {
         return 4 * (this.cropTier-1) + this.statGrowth + this.statGain + this.statResistance;
     }
@@ -77,5 +93,14 @@ export class StaticCropData {
     computeNutrients(nutrientStorage: number) {
         let storageBonus = Math.ceil(nutrientStorage/20);
         return this.biomeNutrientBonus + this.dirtBlocksUnderneath + storageBonus;
+    }
+
+    computeAirQuality() {
+        let heightBonus = Math.floor((this.yValue - 64)/15);
+        if(heightBonus < 0) heightBonus = 0;
+        if(heightBonus > 4) heightBonus = 4;
+        let airBlocksBonus = Math.floor(this.surroundingAirBlocks/2);
+        let skyAccessBonus = this.skyAccess ? 2 : 0;
+        return heightBonus + airBlocksBonus + skyAccessBonus;
     }
 }

@@ -16,9 +16,14 @@ export class UI {
     private nutrientStorageInput = document.getElementById('nutrientStorage') as HTMLInputElement;
     private fertilizedInput = document.getElementById('fertilized') as HTMLInputElement;
 
+    private yValueInput = document.getElementById('yValue') as HTMLInputElement;
+    private surroundingAirBlocksInput = document.getElementById('surroundingAirBlocks') as HTMLInputElement;
+    private skyAccessInput = document.getElementById('skyAccess') as HTMLInputElement;
+
     private envNeedsDiv = document.getElementById('env-needs') as HTMLDivElement;
     private humidityDiv = document.getElementById('humidity') as HTMLDivElement;
     private nutrientDiv = document.getElementById('nutrient') as HTMLDivElement;
+    private airQualityDiv = document.getElementById('airQuality') as HTMLDivElement;
 
     private staticCropData = new StaticCropData();
 
@@ -77,6 +82,21 @@ export class UI {
             this.staticCropData.fertilized = Boolean((e.target as HTMLInputElement).checked);
             this.updateCropData();
         });
+
+        this.yValueInput.addEventListener('input', (e: Event) => {
+            this.staticCropData.yValue = Number((e.target as HTMLInputElement).value);
+            this.updateCropData();
+        });
+
+        this.surroundingAirBlocksInput.addEventListener('input', (e: Event) => {
+            this.staticCropData.surroundingAirBlocks = Number((e.target as HTMLInputElement).value);
+            this.updateCropData();
+        });
+
+        this.skyAccessInput.addEventListener('input', (e: Event) => {
+            this.staticCropData.skyAccess = Boolean((e.target as HTMLInputElement).checked);
+            this.updateCropData();
+        });
     }
 
     updateCropData() {
@@ -84,5 +104,6 @@ export class UI {
         this.humidityDiv.textContent = "" + this.staticCropData.computeHumidity();
         let currentNutrientStorage = Number(this.nutrientStorageInput.value);
         this.nutrientDiv.textContent = "" + this.staticCropData.computeNutrients(currentNutrientStorage);
+        this.airQualityDiv.textContent = "" + this.staticCropData.computeAirQuality();
     }
 }
