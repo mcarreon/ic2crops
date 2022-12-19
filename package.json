@@ -1,0 +1,23 @@
+{
+  "name": "ic2crops",
+  "version": "0.0.0",
+  "description": "Tool to analyze IC2 crops",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cubic-chariot/ic2crops.git"
+  },
+  "keywords": [
+    "ic2",
+    "minecraft",
+    "gtnh"
+  ],
+  "author": "Cubic Chariot",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/cubic-chariot/ic2crops/issues"
+  },
+  "homepage": "https://github.com/cubic-chariot/ic2crops#readme"
+}
