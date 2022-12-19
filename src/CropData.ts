@@ -34,13 +34,48 @@ export class StaticCropData {
      */
     hydrated: boolean = false;
 
+    /* Biome-dependent nutrient bonus; an integer between -10 and 10.
+     */
+    biomeNutrientBonus: number = 0;
+
+    /* Number of dirt blocks underneath the crop,
+     * _ignoring_ the block immediately below it.
+     * This number is always between 0 and 3.
+     *
+     * Internally, IC2 starts analyzing the block 2 blocks below the crop,
+     * and goes downwards up to and including the block 4 blocks below it.
+     * It counts the number of Vanilla dirt blocks,
+     * stopping if any non-dirt block is found.
+     *
+     * Note that,
+     * for crops that have a foundational block
+     * (e.g. oreberries),
+     * this number can be at most 2.
+     */
+    dirtBlocksUnderneath: number = 0;
+
+    /* Whether the crop constantly gets fertilized or not.
+     *
+     * The nutrient storage is dynamic,
+     * so this boolean will only be used during the computation.
+     */
+    fertilized: boolean = false;
+
     computeEnvironmentalNeeds() {
         return 4 * (this.cropTier-1) + this.statGrowth + this.statGain + this.statResistance;
     }
 
-    computeHumidityBonus() {
+    computeHumidity() {
         let farmlandBonus = this.atopHydratedFarmland ? 2 : 0;
         let hydrationBonus = this.hydrated ? 10 : 0;
         return this.biomeHumidityBonus + farmlandBonus + hydrationBonus;
+    }
+
+    /* The nutrient storage fluctuates over the lifetime of the crop,
+     * so it cannot be considered as a constant.
+     */
+    computeNutrients(nutrientStorage: number) {
+        let storageBonus = Math.ceil(nutrientStorage/20);
+        return this.biomeNutrientBonus + this.dirtBlocksUnderneath + storageBonus;
     }
 }

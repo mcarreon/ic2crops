@@ -6,12 +6,19 @@ export class UI {
     private statGainInput = document.getElementById('statGain') as HTMLInputElement;
     private statGrowthInput = document.getElementById('statGrowth') as HTMLInputElement;
     private statResistanceInput = document.getElementById('statResistance') as HTMLInputElement;
+
     private biomeHumidityBonusInput = document.getElementById('biomeHumidityBonus') as HTMLInputElement;
     private hydratedInput = document.getElementById('hydrated') as HTMLInputElement;
     private atopHydratedFarmlandInput = document.getElementById('atopHydratedFarmland') as HTMLInputElement;
 
+    private biomeNutrientBonusInput = document.getElementById('biomeNutrientBonus') as HTMLInputElement;
+    private dirtBlocksUnderneathInput = document.getElementById('dirtBlocksUnderneath') as HTMLInputElement;
+    private nutrientStorageInput = document.getElementById('nutrientStorage') as HTMLInputElement;
+    private fertilizedInput = document.getElementById('fertilized') as HTMLInputElement;
+
     private envNeedsDiv = document.getElementById('env-needs') as HTMLDivElement;
     private humidityDiv = document.getElementById('humidity') as HTMLDivElement;
+    private nutrientDiv = document.getElementById('nutrient') as HTMLDivElement;
 
     private staticCropData = new StaticCropData();
 
@@ -50,10 +57,32 @@ export class UI {
             this.staticCropData.atopHydratedFarmland = Boolean((e.target as HTMLInputElement).checked);
             this.updateCropData();
         });
+
+        this.biomeNutrientBonusInput.addEventListener('input', (e: Event) => {
+            this.staticCropData.biomeNutrientBonus = Number((e.target as HTMLInputElement).value);
+            this.updateCropData();
+        });
+
+        this.dirtBlocksUnderneathInput.addEventListener('input', (e: Event) => {
+            this.staticCropData.dirtBlocksUnderneath = Number((e.target as HTMLInputElement).value);
+            this.updateCropData();
+        });
+
+        this.nutrientStorageInput.addEventListener('input', () => {
+            // Not static data, so we don't store it
+            this.updateCropData();
+        });
+
+        this.fertilizedInput.addEventListener('input', (e: Event) => {
+            this.staticCropData.fertilized = Boolean((e.target as HTMLInputElement).checked);
+            this.updateCropData();
+        });
     }
 
     updateCropData() {
         this.envNeedsDiv.textContent = "" + this.staticCropData.computeEnvironmentalNeeds();
-        this.humidityDiv.textContent = "" + this.staticCropData.computeHumidityBonus();
+        this.humidityDiv.textContent = "" + this.staticCropData.computeHumidity();
+        let currentNutrientStorage = Number(this.nutrientStorageInput.value);
+        this.nutrientDiv.textContent = "" + this.staticCropData.computeNutrients(currentNutrientStorage);
     }
 }

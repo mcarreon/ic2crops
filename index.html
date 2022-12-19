@@ -24,6 +24,7 @@
             Resistance:
             <input type="number" id="statResistance" min="0" max="31" value="1" />
         </div>
+
         <div>
             Biome Humidity Bonus:
             <input type="number" id="biomeHumidityBonus" min="-10" max="10" value="0" />
@@ -36,6 +37,23 @@
             Does the crop sits atop hydrated farmland?
             <input type="checkbox" id="atopHydratedFarmland" />
         </div>
+
+        <div>
+            Biome Nutrient Bonus:
+            <input type="number" id="biomeNutrientBonus" min="-10" max="10" value="0" />
+        </div>
+        <div>
+            Dirt blocks underneath the crop:
+            <input type="number" id="dirtBlocksUnderneath" min="0" max="3" value="0" />
+        </div>
+        <div class="dynamic-crop-data">
+            Current nutrient storage:
+            <input type="number" id="nutrientStorage" min="0" max="199" value="0" />
+        </div>
+        <div>
+            Is the crop constantly fertilized?
+            <input type="checkbox" id="fertilized" />
+        </div>
     </div>
 
     <div class="crop-info">
@@ -44,6 +62,9 @@
         </div>
         <div> Humidity value:
             <div id="humidity">0</div>
+        </div>
+        <div> Nutrient value:
+            <div id="nutrient">0</div>
         </div>
     </div>
 </body>
