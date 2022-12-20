@@ -1,5 +1,45 @@
 import { StaticCropData } from './CropData.js';
 
+class GrowthStageInput {
+    private static template = document
+        .querySelector<HTMLTemplateElement>('#growth-stage-input')!
+        .content
+        .querySelector<HTMLDivElement>('div')!; // I just want the div inside the template
+    private index: number;
+    private valueModificationCallback: (value: number) => void;
+    private div: HTMLDivElement;
+    private indexDisplayDiv: HTMLDivElement;
+    private stageInput: HTMLInputElement;
+
+    constructor(index: number, valueModificationCallback: (value: number) => void) {
+        this.index = index;
+        this.valueModificationCallback = valueModificationCallback;
+
+        this.div = GrowthStageInput.template.cloneNode(true) as HTMLDivElement;
+        this.indexDisplayDiv = this.div.querySelector('.growth-stage-index') as HTMLDivElement;
+        this.stageInput = this.div.querySelector('input') as HTMLInputElement;
+
+        this.indexDisplayDiv.textContent = "" + (this.index+1);
+        this.stageInput.addEventListener('input', (e: Event) => {
+            this.valueModificationCallback((e.target as HTMLInputElement).valueAsNumber);
+        });
+        this.valueModificationCallback(this.stageInput.valueAsNumber);
+    }
+
+    getDiv() {
+        return this.div;
+    }
+
+    hideDiv() {
+        this.div.style['display'] = 'none';
+    }
+
+    showDiv() {
+        this.div.style['display'] = '';
+        this.valueModificationCallback(this.stageInput.valueAsNumber);
+    }
+}
+
 export class UI {
     static instance = new UI();
     private cropTierInput = document.getElementById('cropTier') as HTMLInputElement;
@@ -24,11 +64,15 @@ export class UI {
     private nutrientsWeightInput = document.getElementById('nutrientsWeight') as HTMLInputElement;
     private airQualityWeightInput = document.getElementById('airQualityWeight') as HTMLInputElement;
 
+    private numberOfGrowthStagesInput = document.getElementById('numberOfGrowthStages') as HTMLInputElement;
+    private growthStageInputs: GrowthStageInput[] = [];
+
     private envNeedsDiv = document.getElementById('env-needs') as HTMLDivElement;
     private humidityDiv = document.getElementById('humidity') as HTMLDivElement;
     private nutrientDiv = document.getElementById('nutrient') as HTMLDivElement;
     private airQualityDiv = document.getElementById('airQuality') as HTMLDivElement;
     private environmentalValueDiv = document.getElementById('environmentalValue') as HTMLDivElement;
+    private growthStagesDiv = document.getElementById('growth-stages') as HTMLDivElement;
 
     private staticCropData = new StaticCropData();
 
@@ -101,6 +145,10 @@ export class UI {
             this.staticCropData.airQualityWeight = value;
         });
 
+        this.registerNumericAttributeCallback(this.numberOfGrowthStagesInput, newNumber => {
+            this.setNumberOfGrowthStages(newNumber);
+        });
+
         /* The this.register functions call the callback with the current values upon registering,
          * but it only calls updateCropData if the value modifies.
          * So we call it once after all values get updated.
@@ -125,6 +173,24 @@ export class UI {
             this.updateCropData();
         });
         callback(Boolean(element.checked));
+    }
+
+    private setNumberOfGrowthStages(newNumber: number) {
+        this.staticCropData.setNumberOfGrowthStages(newNumber);
+        while(this.growthStageInputs.length < newNumber-1) {
+            let index = this.growthStageInputs.length;
+            let newGrowthStageInput = new GrowthStageInput(index, (value: number) => {
+                this.staticCropData.growthStages[index] = value;
+            });
+            this.growthStageInputs.push(newGrowthStageInput);
+            this.growthStagesDiv.appendChild(newGrowthStageInput.getDiv());
+        }
+        for(let i = 0; i < newNumber-1; i++) {
+            this.growthStageInputs[i]!.showDiv();
+        }
+        for(let i = newNumber-1; i < this.growthStageInputs.length; i++) {
+            this.growthStageInputs[i]!.hideDiv();
+        }
     }
 
     updateCropData() {

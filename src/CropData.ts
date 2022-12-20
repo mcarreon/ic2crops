@@ -84,6 +84,32 @@ export class StaticCropData {
     nutrientsWeight: number = 1;
     airQualityWeight: number = 1;
 
+    /* The duration of each growth stage.
+     * Crops don't grow in the very last growth stage,
+     * so growthStages[growthStages.length-1] is assumed to be 0.
+     *
+     * In the code (and in most places providing documentation),
+     * the growth stages are indexed by 1,
+     * whereas, for convenience, we index it by zero.
+     * So, for example,
+     * the growth stage durations for the essence berry would be [500, 3000, 3000, 0].
+     */
+    growthStages: number[] = [1000, 1000, 1000, 0];
+
+    /* Enlarge or shrinks this.growthStages so its length matches the given number.
+     * Newly created stages will be assigned the default duration of 1000.
+     */
+    setNumberOfGrowthStages(numberOfStages: number) {
+        let oldLength = this.growthStages.length;
+        this.growthStages.length = numberOfStages;
+        this.growthStages[numberOfStages-1] = 0;
+        if(oldLength < numberOfStages) { // We added stages, must fill array
+            for(let i = oldLength; i < numberOfStages-1; i++) {
+                this.growthStages[i] = 1000;
+            }
+        }
+    }
+
     computeEnvironmentalNeeds() {
         return 4 * (this.cropTier-1) + this.statGrowth + this.statGain + this.statResistance;
     }
