@@ -67,6 +67,19 @@
             Does the crop has sky access?
             <input type="checkbox" id="skyAccess" />
         </div>
+
+        <div>
+            Crop's humidity weight:
+            <input type="number" id="humidityWeight" step="0.05" min="-1" max="2" value="0" />
+        </div>
+        <div>
+            Crop's nutrients weight:
+            <input type="number" id="nutrientsWeight" step="0.05" min="-1" max="2" value="0" />
+        </div>
+        <div>
+            Crop's air quality weight:
+            <input type="number" id="airQualityWeight" step="0.05" min="-1" max="2" value="0" />
+        </div>
     </div>
 
     <div class="crop-info">
@@ -81,6 +94,9 @@
         </div>
         <div> Air quality value:
             <div id="airQuality">0</div>
+        </div>
+        <div> Aggregated environmental value:
+            <div id="environmentalValue">0</div>
         </div>
     </div>
 </body>

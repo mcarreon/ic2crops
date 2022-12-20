@@ -77,6 +77,13 @@ export class StaticCropData {
      */
     skyAccess: boolean = false;
 
+    /* Weighting of each of the three environmental values.
+     * These numbers may be fractional and negative and don't need to sum to 3.
+     */
+    humidityWeight: number = 1;
+    nutrientsWeight: number = 1;
+    airQualityWeight: number = 1;
+
     computeEnvironmentalNeeds() {
         return 4 * (this.cropTier-1) + this.statGrowth + this.statGain + this.statResistance;
     }
@@ -102,5 +109,11 @@ export class StaticCropData {
         let airBlocksBonus = Math.floor(this.surroundingAirBlocks/2);
         let skyAccessBonus = this.skyAccess ? 2 : 0;
         return heightBonus + airBlocksBonus + skyAccessBonus;
+    }
+
+    computeEnvironmentalValue(nutrientStorage: number) {
+        return 5 * (this.humidityWeight * this.computeHumidity() +
+                this.nutrientsWeight * this.computeNutrients(nutrientStorage) +
+                this.airQualityWeight * this.computeAirQuality() );
     }
 }
