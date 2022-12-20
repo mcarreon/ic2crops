@@ -33,96 +33,104 @@ export class UI {
     private staticCropData = new StaticCropData();
 
     private constructor() {
-        this.cropTierInput.addEventListener('input', (e: Event) => {
-            this.staticCropData.cropTier = Number((e.target as HTMLInputElement).value);
-            this.updateCropData();
+        this.registerNumericAttributeCallback(this.cropTierInput, value => {
+            this.staticCropData.cropTier = value;
         });
 
-        this.statGainInput.addEventListener('input', (e: Event) => {
-            this.staticCropData.statGain = Number((e.target as HTMLInputElement).value);
-            this.updateCropData();
+        this.registerNumericAttributeCallback(this.statGainInput, value => {
+            this.staticCropData.statGain = value;
         });
 
-        this.statGrowthInput.addEventListener('input', (e: Event) => {
-            this.staticCropData.statGrowth = Number((e.target as HTMLInputElement).value);
-            this.updateCropData();
+        this.registerNumericAttributeCallback(this.statGrowthInput, value => {
+            this.staticCropData.statGrowth = value;
         });
 
-        this.statResistanceInput.addEventListener('input', (e: Event) => {
-            this.staticCropData.statResistance = Number((e.target as HTMLInputElement).value);
-            this.updateCropData();
+        this.registerNumericAttributeCallback(this.statResistanceInput, value => {
+            this.staticCropData.statResistance = value;
         });
 
-        this.biomeHumidityBonusInput.addEventListener('input', (e: Event) => {
-            this.staticCropData.biomeHumidityBonus = Number((e.target as HTMLInputElement).value);
-            this.updateCropData();
+        this.registerNumericAttributeCallback(this.biomeHumidityBonusInput, value => {
+            this.staticCropData.biomeHumidityBonus = value;
         });
 
-        this.hydratedInput.addEventListener('input', (e: Event) => {
-            this.staticCropData.hydrated = Boolean((e.target as HTMLInputElement).checked);
-            this.updateCropData();
+        this.registerBooleanAttributeCallback(this.hydratedInput, value => {
+            this.staticCropData.hydrated = value;
         });
 
-        this.atopHydratedFarmlandInput.addEventListener('input', (e: Event) => {
-            this.staticCropData.atopHydratedFarmland = Boolean((e.target as HTMLInputElement).checked);
-            this.updateCropData();
+        this.registerBooleanAttributeCallback(this.atopHydratedFarmlandInput, value => {
+            this.staticCropData.atopHydratedFarmland = value;
         });
 
-        this.biomeNutrientBonusInput.addEventListener('input', (e: Event) => {
-            this.staticCropData.biomeNutrientBonus = Number((e.target as HTMLInputElement).value);
-            this.updateCropData();
+        this.registerNumericAttributeCallback(this.biomeNutrientBonusInput, value => {
+            this.staticCropData.biomeNutrientBonus = value;
         });
 
-        this.dirtBlocksUnderneathInput.addEventListener('input', (e: Event) => {
-            this.staticCropData.dirtBlocksUnderneath = Number((e.target as HTMLInputElement).value);
-            this.updateCropData();
+        this.registerNumericAttributeCallback(this.dirtBlocksUnderneathInput, value => {
+            this.staticCropData.dirtBlocksUnderneath = value;
         });
 
-        this.nutrientStorageInput.addEventListener('input', () => {
+        this.registerNumericAttributeCallback(this.nutrientStorageInput, () => {
             // Not static data, so we don't store it
-            this.updateCropData();
         });
 
-        this.fertilizedInput.addEventListener('input', (e: Event) => {
-            this.staticCropData.fertilized = Boolean((e.target as HTMLInputElement).checked);
-            this.updateCropData();
+        this.registerBooleanAttributeCallback(this.fertilizedInput, value => {
+            this.staticCropData.fertilized = value;
         });
 
-        this.yValueInput.addEventListener('input', (e: Event) => {
-            this.staticCropData.yValue = Number((e.target as HTMLInputElement).value);
-            this.updateCropData();
+        this.registerNumericAttributeCallback(this.yValueInput, value => {
+            this.staticCropData.yValue = value;
         });
 
-        this.surroundingAirBlocksInput.addEventListener('input', (e: Event) => {
-            this.staticCropData.surroundingAirBlocks = Number((e.target as HTMLInputElement).value);
-            this.updateCropData();
+        this.registerNumericAttributeCallback(this.surroundingAirBlocksInput, value => {
+            this.staticCropData.surroundingAirBlocks = value;
         });
 
-        this.skyAccessInput.addEventListener('input', (e: Event) => {
-            this.staticCropData.skyAccess = Boolean((e.target as HTMLInputElement).checked);
-            this.updateCropData();
+        this.registerBooleanAttributeCallback(this.skyAccessInput, value => {
+            this.staticCropData.skyAccess = value;
         });
 
-        this.humidityWeightInput.addEventListener('input', (e: Event) => {
-            this.staticCropData.humidityWeight = Number((e.target as HTMLInputElement).value);
-            this.updateCropData();
+        this.registerNumericAttributeCallback(this.humidityWeightInput, value => {
+            this.staticCropData.humidityWeight = value;
         });
 
-        this.nutrientsWeightInput.addEventListener('input', (e: Event) => {
-            this.staticCropData.nutrientsWeight = Number((e.target as HTMLInputElement).value);
-            this.updateCropData();
+        this.registerNumericAttributeCallback(this.nutrientsWeightInput, value => {
+            this.staticCropData.nutrientsWeight = value;
         });
 
-        this.airQualityWeightInput.addEventListener('input', (e: Event) => {
-            this.staticCropData.airQualityWeight = Number((e.target as HTMLInputElement).value);
+        this.registerNumericAttributeCallback(this.airQualityWeightInput, value => {
+            this.staticCropData.airQualityWeight = value;
+        });
+
+        /* The this.register functions call the callback with the current values upon registering,
+         * but it only calls updateCropData if the value modifies.
+         * So we call it once after all values get updated.
+         */
+        this.updateCropData();
+    }
+
+    private registerNumericAttributeCallback(element: HTMLInputElement, callback: (value: number) => void) {
+        element.addEventListener('input', (e: Event) => {
+            callback((e.target as HTMLInputElement).valueAsNumber);
             this.updateCropData();
         });
+        /* Some browsers (like Firefox) store the last value used in an input field.
+         * This makes sure that the internal variables match what's seen by the user.
+         */
+        callback(element.valueAsNumber);
+    }
+
+    private registerBooleanAttributeCallback(element: HTMLInputElement, callback: (value: boolean) => void) {
+        element.addEventListener('input', (e: Event) => {
+            callback(Boolean((e.target as HTMLInputElement).checked));
+            this.updateCropData();
+        });
+        callback(Boolean(element.checked));
     }
 
     updateCropData() {
         this.envNeedsDiv.textContent = "" + this.staticCropData.computeEnvironmentalNeeds();
         this.humidityDiv.textContent = "" + this.staticCropData.computeHumidity();
-        let currentNutrientStorage = Number(this.nutrientStorageInput.value);
+        let currentNutrientStorage = this.nutrientStorageInput.valueAsNumber;
         this.nutrientDiv.textContent = "" + this.staticCropData.computeNutrients(currentNutrientStorage);
         this.airQualityDiv.textContent = "" + this.staticCropData.computeAirQuality();
         this.environmentalValueDiv.textContent = "" + this.staticCropData.computeEnvironmentalValue(currentNutrientStorage);
