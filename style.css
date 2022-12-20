@@ -22,3 +22,7 @@ body {
 .crop-info div {
     display: inline-block;
 }
+
+.crop-data input:invalid {
+    border-color: red;
+}
