@@ -112,8 +112,8 @@ export class StaticCropData {
     }
 
     computeEnvironmentalValue(nutrientStorage: number) {
-        return 5 * (this.humidityWeight * this.computeHumidity() +
+        return 5 * Math.floor(this.humidityWeight * this.computeHumidity() +
                 this.nutrientsWeight * this.computeNutrients(nutrientStorage) +
-                this.airQualityWeight * this.computeAirQuality() );
+                this.airQualityWeight * this.computeAirQuality());
     }
 }
