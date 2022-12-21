@@ -10,41 +10,41 @@
     <div class="crop-data">
         <div>
             Crop tier:
-            <input type="number" id="cropTier" min="0" max="16" value="1" />
+            <input type="number" id="cropTier" min="0" max="16" value="1" required />
         </div>
         <div>
             Growth:
-            <input type="number" id="statGrowth" min="0" max="31" value="1" />
+            <input type="number" id="statGrowth" min="0" max="31" value="1" required />
         </div>
         <div>
             Gain:
-            <input type="number" id="statGain" min="0" max="31" value="1" />
+            <input type="number" id="statGain" min="0" max="31" value="1" required />
         </div>
         <div>
             Resistance:
-            <input type="number" id="statResistance" min="0" max="31" value="1" />
+            <input type="number" id="statResistance" min="0" max="31" value="1" required />
         </div>
 
         <div>
             Biome Humidity Bonus:
-            <input type="number" id="biomeHumidityBonus" min="-10" max="10" value="0" />
+            <input type="number" id="biomeHumidityBonus" min="-10" max="10" value="0" required />
         </div>
         <div>
             Is the crop constantly hydrated?
-            <input type="checkbox" id="hydrated" />
+            <input type="checkbox" id="hydrated" required />
         </div>
         <div>
             Does the crop sits atop hydrated farmland?
-            <input type="checkbox" id="atopHydratedFarmland" />
+            <input type="checkbox" id="atopHydratedFarmland" required />
         </div>
 
         <div>
             Biome Nutrient Bonus:
-            <input type="number" id="biomeNutrientBonus" min="-10" max="10" value="0" />
+            <input type="number" id="biomeNutrientBonus" min="-10" max="10" value="0" required />
         </div>
         <div>
             Dirt blocks underneath the crop:
-            <input type="number" id="dirtBlocksUnderneath" min="0" max="3" value="0" />
+            <input type="number" id="dirtBlocksUnderneath" min="0" max="3" value="0" required />
         </div>
         <div class="dynamic-crop-data">
             Current nutrient storage:
@@ -52,44 +52,44 @@
         </div>
         <div>
             Is the crop constantly fertilized?
-            <input type="checkbox" id="fertilized" />
+            <input type="checkbox" id="fertilized" required />
         </div>
 
         <div>
             Crop's Y value:
-            <input type="number" id="yValue" min="0" max="255" value="0" />
+            <input type="number" id="yValue" min="0" max="255" value="0" required />
         </div>
         <div>
             Surrounding air blocks:
-            <input type="number" id="surroundingAirBlocks" min="0" max="8" value="0" />
+            <input type="number" id="surroundingAirBlocks" min="0" max="8" value="0" required />
         </div>
         <div>
             Does the crop has sky access?
-            <input type="checkbox" id="skyAccess" />
+            <input type="checkbox" id="skyAccess" required />
         </div>
 
         <div>
             Crop's humidity weight:
-            <input type="number" id="humidityWeight" step="0.05" min="-1" max="2" value="0" />
+            <input type="number" id="humidityWeight" step="0.05" min="-1" max="2" value="0" required />
         </div>
         <div>
             Crop's nutrients weight:
-            <input type="number" id="nutrientsWeight" step="0.05" min="-1" max="2" value="0" />
+            <input type="number" id="nutrientsWeight" step="0.05" min="-1" max="2" value="0" required />
         </div>
         <div>
             Crop's air quality weight:
-            <input type="number" id="airQualityWeight" step="0.05" min="-1" max="2" value="0" />
+            <input type="number" id="airQualityWeight" step="0.05" min="-1" max="2" value="0" required />
         </div>
 
         <div>
             Number of growth stages:
-            <input type="number" id="numberOfGrowthStages" min="3" max="7" value="4" />
+            <input type="number" id="numberOfGrowthStages" min="3" max="7" value="4" required />
         </div>
         <div id="growth-stages">
             <template id="growth-stage-input">
                 <div>
                     Growth stage <div class="growth-stage-index">n</div>:
-                    <input type="number" step="25" min="100" max="125000" value="1000" />
+                    <input type="number" step="25" min="100" max="125000" value="1000" required />
                 </div>
             </template>
         </div>
