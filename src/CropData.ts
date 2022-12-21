@@ -196,4 +196,53 @@ export class StaticCropData {
         }
         return mergeWeightLists(growthPoints).sort(([g1, _w1], [g2, _w2]) => g1-g2);
     }
+
+    static computeExpectedStepsInGrowthStage(
+        growthStageDuration: number,
+        growthPointGainsProbabilities: WeightList<number>
+    ): number
+    {
+        /* Dynamic programming algorithm.
+         * Invariant: growthStageDuration[i] is the expected number of steps
+         * for the crop to go from i growth points to growthStageDuration growth points.
+         */
+        let expectedDuration = new Array(growthStageDuration + 1);
+        expectedDuration[growthStageDuration] = 0;
+
+        for(let i = growthStageDuration-1; i >= 0; i--) {
+            let sum = 0;
+            for(let [growth, probability] of growthPointGainsProbabilities) {
+                if(growth == 0) {
+                    /* We may stay in this stage for a while; we'll fix this later.
+                     */
+                    continue;
+                } else if(i + growth > growthStageDuration) {
+                    /* The crop will need exactly one more step in this case.
+                     */
+                    sum += probability;
+                } else {
+                    /* The crop will need 1 + expectedDuration[i + growth] steps in this case.
+                     */
+                    sum += probability * (1 + expectedDuration[i + growth]);
+                }
+            }
+            if(growthPointGainsProbabilities[0]![0] === 0) {
+                let probability = growthPointGainsProbabilities[0]![1];
+                /* We may stay in this stage.
+                 *
+                 * First we will stay in this stage for 1/(1-probability) steps,
+                 * then we will take one of the other transitions.
+                 *
+                 * The probability of each of the other transitions,
+                 * conditioned in not staying in this stage,
+                 * is their normal probability multiplied by 1/(1-probability),
+                 * so we just multiply `sum` by 1/(1-probability) to compute this second part.
+                 */
+                sum = (1 + sum)/(1 - probability);
+            }
+            expectedDuration[i] = sum;
+        }
+
+        return expectedDuration[0];
+    }
 }

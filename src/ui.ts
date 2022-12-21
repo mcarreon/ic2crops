@@ -75,6 +75,8 @@ export class UI {
     private growthStagesDiv = document.getElementById('growth-stages') as HTMLDivElement;
     private growthPointsInfoDiv = document.getElementById('growth-points-info') as HTMLDivElement;
     private growthPointsProbabilitiesDiv = document.getElementById('growth-points-probabilities') as HTMLDivElement;
+    private growthStagesInfoDiv = document.getElementById('growth-stages-info') as HTMLDivElement;
+    private growthStagesExpectanciesDiv = document.getElementById('growth-stages-expectancies') as HTMLDivElement;
 
     private staticCropData = new StaticCropData();
 
@@ -184,6 +186,7 @@ export class UI {
             let index = this.growthStageInputs.length;
             let newGrowthStageInput = new GrowthStageInput(index, (value: number) => {
                 this.staticCropData.growthStages[index] = value;
+                this.updateCropData();
             });
             this.growthStageInputs.push(newGrowthStageInput);
             this.growthStagesDiv.appendChild(newGrowthStageInput.getDiv());
@@ -205,6 +208,7 @@ export class UI {
         this.environmentalValueDiv.textContent = "" + this.staticCropData.computeEnvironmentalValue(currentNutrientStorage);
 
         this.updateGrowthPointsProbabilities();
+        this.updateGrowthStagesExpectedDurations();
     }
 
     updateGrowthPointsProbabilities() {
@@ -225,6 +229,31 @@ export class UI {
             for(let [growth, probability] of growthPoints) {
                 let p = (100 * probability).toFixed(2);
                 this.growthPointsProbabilitiesDiv.textContent += `[${growth}: ${p}%] `;
+            }
+        }
+    }
+
+    updateGrowthStagesExpectedDurations() {
+        let growthPoints;
+        if(this.staticCropData.fertilized) {
+            this.growthStagesInfoDiv.textContent = "(Estimated) expected duration of each growth stage: ";
+            growthPoints = this.staticCropData.computeAverageGrowthPointsWithNutrition();
+        } else {
+            this.growthStagesInfoDiv.textContent = "Expected duration of each growth stage: ";
+            growthPoints = this.staticCropData.computeGainedGrowthPoints();
+        }
+
+        if(growthPoints.length == 0) {
+            this.growthStagesExpectanciesDiv.textContent =
+                "Not enough environmental resources, the crop will die in the long run.";
+        } else {
+            this.growthStagesExpectanciesDiv.textContent = "";
+            for(let i = 0; i < this.staticCropData.growthStages.length - 1; i++) {
+                let expectancy = StaticCropData.computeExpectedStepsInGrowthStage(
+                        this.staticCropData.growthStages[i]!, growthPoints
+                );
+                let e = expectancy.toFixed(2);
+                this.growthStagesExpectanciesDiv.textContent += `[${i}: ${e} steps] `;
             }
         }
     }
