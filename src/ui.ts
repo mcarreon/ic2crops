@@ -176,6 +176,7 @@ export class UI {
     }
 
     private setNumberOfGrowthStages(newNumber: number) {
+        if(!(newNumber > 0)) return;
         this.staticCropData.setNumberOfGrowthStages(newNumber);
         while(this.growthStageInputs.length < newNumber-1) {
             let index = this.growthStageInputs.length;
