@@ -73,6 +73,8 @@ export class UI {
     private airQualityDiv = document.getElementById('airQuality') as HTMLDivElement;
     private environmentalValueDiv = document.getElementById('environmentalValue') as HTMLDivElement;
     private growthStagesDiv = document.getElementById('growth-stages') as HTMLDivElement;
+    private growthPointsInfoDiv = document.getElementById('growth-points-info') as HTMLDivElement;
+    private growthPointsProbabilitiesDiv = document.getElementById('growth-points-probabilities') as HTMLDivElement;
 
     private staticCropData = new StaticCropData();
 
@@ -201,5 +203,29 @@ export class UI {
         this.nutrientDiv.textContent = "" + this.staticCropData.computeNutrients(currentNutrientStorage);
         this.airQualityDiv.textContent = "" + this.staticCropData.computeAirQuality();
         this.environmentalValueDiv.textContent = "" + this.staticCropData.computeEnvironmentalValue(currentNutrientStorage);
+
+        this.updateGrowthPointsProbabilities();
+    }
+
+    updateGrowthPointsProbabilities() {
+        let growthPoints;
+        if(this.staticCropData.fertilized) {
+            this.growthPointsInfoDiv.textContent = "Average probabilities of each growth value:"
+            growthPoints = this.staticCropData.computeAverageGrowthPointsWithNutrition();
+        } else {
+            this.growthPointsInfoDiv.textContent = "Probabilities of each growth value:"
+            growthPoints = this.staticCropData.computeGainedGrowthPoints();
+        }
+
+        if(growthPoints.length == 0) {
+            this.growthPointsProbabilitiesDiv.textContent =
+                "Not enough environmental resources, the crop will die in the long run.";
+        } else {
+            this.growthPointsProbabilitiesDiv.textContent = "";
+            for(let [growth, probability] of growthPoints) {
+                let p = (100 * probability).toFixed(2);
+                this.growthPointsProbabilitiesDiv.textContent += `[${growth}: ${p}%] `;
+            }
+        }
     }
 }

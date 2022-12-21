@@ -1,3 +1,5 @@
+import { WeightList, mergeWeightLists } from './Weights.js';
+
 /* Stores all crop-related info that is unlikely to change
  * if the crop is being used to produce resources.
  */
@@ -141,5 +143,57 @@ export class StaticCropData {
         return 5 * Math.floor(this.humidityWeight * this.computeHumidity() +
                 this.nutrientsWeight * this.computeNutrients(nutrientStorage) +
                 this.airQualityWeight * this.computeAirQuality());
+    }
+
+    /* Computes a list of pairs [gainedPoints, probability]
+     * which lists all the possibilities of growth points to be gained,
+     * with the corresponding probabilities.
+     *
+     * The list is sorted in ascending order of growth points.
+     * The probabilities are strictly positive.
+     *
+     * If the crop has a non-zero probability of dying,
+     * this method returns just [].
+     */
+    computeGainedGrowthPoints(nutrientStorage: number = 0): WeightList<number> {
+        let envNeeds = this.computeEnvironmentalNeeds();
+        let envValue = this.computeEnvironmentalValue(nutrientStorage);
+
+        if(envNeeds - envValue > 25) {
+            if(this.statResistance == 31) {
+                // Crop does not die, but does not grow either
+                return [[0, 1]];
+            } else {
+                // Crop may die, which means it will die in the long run
+                return [];
+            }
+        }
+
+        let ret: WeightList<number> = [];
+
+        let baseMin = 3 + this.statGrowth;
+        let baseMax = 3 + 6 + this.statGrowth;
+
+        for(let i = baseMin; i <= baseMax; i++) {
+            let growth = Math.floor(i * (100 + envValue - envNeeds) / 100);
+            ret.push([growth, 1/7]);
+        }
+        return ret;
+    }
+
+    /* Similar as computedGainedGrowthPoints,
+     * but averaging through all the permissible nutrientStorage values
+     * that may happen if the crop is being constantly fertilized.
+     */
+    computeAverageGrowthPointsWithNutrition(): WeightList<number> {
+        let growthPoints: WeightList<number>[] = [];
+        for(let nutrients = 100; nutrients < 200; nutrients++) {
+            let points = this.computeGainedGrowthPoints(nutrients);
+            if(points.length === 0) {
+                return [];
+            }
+            growthPoints.push(points);
+        }
+        return mergeWeightLists(growthPoints).sort(([g1, _w1], [g2, _w2]) => g1-g2);
     }
 }
