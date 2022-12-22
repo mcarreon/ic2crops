@@ -2,8 +2,9 @@
   "name": "ic2crops",
   "version": "0.1.0",
   "description": "Tool to analyze IC2 crops",
+  "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build": "rollup -c",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
