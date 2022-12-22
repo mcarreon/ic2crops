@@ -66,6 +66,8 @@ export class UI {
 
     private numberOfGrowthStagesInput = document.getElementById('numberOfGrowthStages') as HTMLInputElement;
     private growthStageInputs: GrowthStageInput[] = [];
+    private growthStageAfterHarvestInput = document.getElementById('growthStageAfterHarvest') as HTMLInputElement;
+    private randomGrowthStageAfterHarvestInput = document.getElementById('randomGrowthStageAfterHarvest') as HTMLInputElement;
 
     private envNeedsDiv = document.getElementById('env-needs') as HTMLDivElement;
     private humidityDiv = document.getElementById('humidity') as HTMLDivElement;
@@ -77,6 +79,7 @@ export class UI {
     private growthPointsProbabilitiesDiv = document.getElementById('growth-points-probabilities') as HTMLDivElement;
     private growthStagesInfoDiv = document.getElementById('growth-stages-info') as HTMLDivElement;
     private growthStagesExpectanciesDiv = document.getElementById('growth-stages-expectancies') as HTMLDivElement;
+    private expectedTicksBetweenHarvestsDiv = document.getElementById('expectedTicksBetweenHarvests') as HTMLDivElement;
 
     private staticCropData = new StaticCropData();
 
@@ -150,8 +153,25 @@ export class UI {
         });
 
         this.registerNumericAttributeCallback(this.numberOfGrowthStagesInput, newNumber => {
+            // Custom behavior for growth stages
             this.setNumberOfGrowthStages(newNumber);
         });
+
+        this.registerNumericAttributeCallback(this.growthStageAfterHarvestInput, newStage => {
+            this.staticCropData.growthStageAfterHarvest = newStage;
+        })
+
+        this.registerBooleanAttributeCallback(this.randomGrowthStageAfterHarvestInput, random => {
+            if(random) {
+                this.staticCropData.growthStageAfterHarvest = 'random';
+                this.growthStageAfterHarvestInput.required = false;
+                this.growthStageAfterHarvestInput.disabled = true;
+            } else {
+                this.staticCropData.growthStageAfterHarvest = this.growthStageAfterHarvestInput.valueAsNumber;
+                this.growthStageAfterHarvestInput.required = true;
+                this.growthStageAfterHarvestInput.disabled = false;
+            }
+        })
 
         /* The this.register functions call the callback with the current values upon registering,
          * but it only calls updateCropData if the value modifies.
@@ -197,6 +217,8 @@ export class UI {
         for(let i = newNumber-1; i < this.growthStageInputs.length; i++) {
             this.growthStageInputs[i]!.hideDiv();
         }
+
+        this.growthStageAfterHarvestInput.max = "" + (newNumber-1);
     }
 
     updateCropData() {
@@ -209,6 +231,9 @@ export class UI {
 
         this.updateGrowthPointsProbabilities();
         this.updateGrowthStagesExpectedDurations();
+
+        this.expectedTicksBetweenHarvestsDiv.textContent =
+            this.staticCropData.computeExpectedTicksBetweenHarvests().toFixed(2) + " ticks";
     }
 
     updateGrowthPointsProbabilities() {

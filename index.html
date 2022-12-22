@@ -93,6 +93,13 @@
                 </div>
             </template>
         </div>
+
+        <div>
+            Growth stage after harvesting:
+            <input type="number" id="growthStageAfterHarvest" min="1" max="5" value="3" required />
+            Random?
+            <input type="checkbox" id="randomGrowthStageAfterHarvest" id="fertilized" required />
+        </div>
     </div>
 
     <div class="crop-info">
@@ -118,6 +125,10 @@
         <div>
             <div id="growth-stages-info">Expected duration of each growth stage:</div>
             <div id="growth-stages-expectancies">[0: 0]</div>
+        </div>
+        <div>
+            Mean time between harvests:
+            <div id="expectedTicksBetweenHarvests">0 ticks</div>
         </div>
     </div>
 </body>
