@@ -1,3 +1,4 @@
+import { erf } from 'mathjs';
 import { WeightList, mergeWeightLists } from './Weights.js';
 
 /* Stores all crop-related info that is unlikely to change
@@ -97,6 +98,17 @@ export class StaticCropData {
      * the growth stage durations for the essence berry would be [500, 3000, 3000, 0].
      */
     growthStages: number[] = [1000, 1000, 1000, 0];
+
+    /* The "gain factor" is the return value of CropCard.dropGainChance(),
+     * and is used to increase or decrease the average number of drops.
+     *
+     * May be above 1 (e.g. SaltyRoot's is 4).
+     * Defaults to 0.95 ** cropTier.
+     */
+    gainFactor: number = 1;
+    setDefaultGainFactor() {
+        this.gainFactor = Math.pow(0.95, this.cropTier);
+    }
 
     /* Growth stage that the crop goes to after harvest.
      *
@@ -286,5 +298,36 @@ export class StaticCropData {
             }
             return sum / (this.growthStages.length-1);
         }
+    }
+
+    computeDropCountDistribution(): WeightList<number> {
+        let baseChance = this.gainFactor * Math.pow(1.03, this.statGain);
+        /* The number of drops is calculated by the formula
+         *  round(baseChance * (1 + 0.6827 * g))
+         * where g is a random gaussian variable (mean=0, variance=1).
+         */
+        if(baseChance <= 0) return [[0, 1]];
+
+        let d: WeightList<number> = [];
+        let n = 0;
+        let accumulatedProbability = 0;
+        /* Invariant: accumulatedProbability is the probability that the number of drops
+         * is strictly smaller than n.
+         * We cannot really get the total probability to equal 1,
+         * so will approximate it to within 1e-9.
+         */
+
+        while(accumulatedProbability < 1-1e-9) {
+            /* The number of drops is <= n precisely when the rounded number is <= n+0.5;
+             * i.e. g <= ((n+0.5)/baseChance - 1)/0.6827.
+             * The probability that g <= x is given by 0.5+0.5*erf(x/sqrt(2)),
+             * so the probability of having less than n drops is computed like this:
+             */
+            let probability = 0.5+0.5*erf(((n+0.5)/baseChance-1)/0.6827/Math.SQRT2);
+            d.push([n, probability-accumulatedProbability]);
+            accumulatedProbability = probability;
+            n++;
+        }
+        return d;
     }
 }

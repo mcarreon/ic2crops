@@ -69,6 +69,8 @@ export class UI {
     private growthStageAfterHarvestInput = document.getElementById('growthStageAfterHarvest') as HTMLInputElement;
     private randomGrowthStageAfterHarvestInput = document.getElementById('randomGrowthStageAfterHarvest') as HTMLInputElement;
 
+    private gainFactorInput = document.getElementById('gainFactor') as HTMLInputElement;
+
     private envNeedsDiv = document.getElementById('env-needs') as HTMLDivElement;
     private humidityDiv = document.getElementById('humidity') as HTMLDivElement;
     private nutrientDiv = document.getElementById('nutrient') as HTMLDivElement;
@@ -80,12 +82,15 @@ export class UI {
     private growthStagesInfoDiv = document.getElementById('growth-stages-info') as HTMLDivElement;
     private growthStagesExpectanciesDiv = document.getElementById('growth-stages-expectancies') as HTMLDivElement;
     private expectedTicksBetweenHarvestsDiv = document.getElementById('expectedTicksBetweenHarvests') as HTMLDivElement;
+    private dropNumberDistributionDiv = document.getElementById('dropNumberDistribution') as HTMLDivElement;
 
     private staticCropData = new StaticCropData();
 
     private constructor() {
         this.registerNumericAttributeCallback(this.cropTierInput, value => {
             this.staticCropData.cropTier = value;
+            this.staticCropData.setDefaultGainFactor();
+            this.gainFactorInput.valueAsNumber = this.staticCropData.gainFactor;
         });
 
         this.registerNumericAttributeCallback(this.statGainInput, value => {
@@ -234,6 +239,8 @@ export class UI {
 
         this.expectedTicksBetweenHarvestsDiv.textContent =
             this.staticCropData.computeExpectedTicksBetweenHarvests().toFixed(2) + " ticks";
+
+        this.updateDropNumberDistribution();
     }
 
     updateGrowthPointsProbabilities() {
@@ -280,6 +287,15 @@ export class UI {
                 let e = expectancy.toFixed(2);
                 this.growthStagesExpectanciesDiv.textContent += `[${i}: ${e} steps] `;
             }
+        }
+    }
+
+    updateDropNumberDistribution() {
+        this.dropNumberDistributionDiv.textContent = "";
+        let distribution = this.staticCropData.computeDropCountDistribution();
+        for(let [value, probability] of distribution) {
+            let p = (100 * probability).toFixed(3);
+            this.dropNumberDistributionDiv.textContent += `[${value}: ${p}%] `;
         }
     }
 }

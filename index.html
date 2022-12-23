@@ -100,6 +100,10 @@
             Random?
             <input type="checkbox" id="randomGrowthStageAfterHarvest" id="fertilized" required />
         </div>
+        <div>
+            Gain factor:
+            <input type="number" id="gainFactor" step="any" min="0" value="0.95" required />
+        </div>
     </div>
 
     <div class="crop-info">
@@ -129,6 +133,10 @@
         <div>
             Mean time between harvests:
             <div id="expectedTicksBetweenHarvests">0 ticks</div>
+        </div>
+        <div>
+            Distribution of number of drops:
+            <div id="dropNumberDistribution">[0: 100%]</div>
         </div>
     </div>
 </body>
