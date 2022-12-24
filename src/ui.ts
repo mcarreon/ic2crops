@@ -178,6 +178,10 @@ export class UI {
             }
         })
 
+        this.registerNumericAttributeCallback(this.gainFactorInput, value => {
+            this.staticCropData.gainFactor = value;
+        })
+
         /* The this.register functions call the callback with the current values upon registering,
          * but it only calls updateCropData if the value modifies.
          * So we call it once after all values get updated.
@@ -294,8 +298,13 @@ export class UI {
         this.dropNumberDistributionDiv.textContent = "";
         let distribution = this.staticCropData.computeDropCountDistribution();
         for(let [value, probability] of distribution) {
-            let p = (100 * probability).toFixed(3);
-            this.dropNumberDistributionDiv.textContent += `[${value}: ${p}%] `;
+            let p;
+            if(probability >= 1e-3) {
+                p = (100 * probability).toFixed(3) + '%';
+            } else {
+                p = probability.toExponential(3);
+            }
+            this.dropNumberDistributionDiv.textContent += `[${value}: ${p}] `;
         }
     }
 }
