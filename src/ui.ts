@@ -1,4 +1,4 @@
-import { StaticCropData } from './CropData.js';
+import { StaticCropData } from './CropMath.js';
 
 class GrowthStageInput {
     private static template = document
