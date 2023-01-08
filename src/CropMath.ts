@@ -1,23 +1,93 @@
 import { erf } from 'mathjs';
 import { WeightList, mergeWeightLists } from './Weights.js';
 
+// The three crop stats
+export class CropStats {
+    gain: number = 0;
+    growth: number = 0;
+    resistance: number = 0;
+}
+
+// Data from the crop that must be harvested from the source code
+export class CropData {
+    /* Tier of the crop.
+     */
+    tier: number = 0;
+
+    /* Weighting of each of the three environmental values.
+     * These numbers may be fractional and negative and don't need to sum to 3.
+     */
+    humidityWeight: number = 1;
+    nutrientsWeight: number = 1;
+    airQualityWeight: number = 1;
+
+    /* The duration of each growth stage.
+     * Crops don't grow in the very last growth stage,
+     * so growthStages[growthStages.length-1] is assumed to be 0.
+     *
+     * In the code (and in most places providing documentation),
+     * the growth stages are indexed by 1,
+     * whereas this list is indexed by zero.
+     * So, for example,
+     * the growth stage durations for the essence berry would be [500, 3000, 3000, 0].
+     */
+    growthStages: number[] = [1000, 1000, 1000, 0];
+
+    /* The "gain factor" is the return value of CropCard.dropGainChance(),
+     * and is used to increase or decrease the average number of drops.
+     *
+     * May be above 1 (e.g. SaltyRoot's is 4).
+     * Defaults to 0.95 ** cropTier.
+     */
+    gainFactor: number = 1;
+    setDefaultGainFactor() {
+        this.gainFactor = Math.pow(0.95, this.tier);
+    }
+
+    /* Growth stage that the crop goes to after harvest.
+     *
+     * Some crops (notably Stickreed) transition to some random stage except the last one;
+     * for these crops, this attribute reads 'random'.
+     *
+     * This field is "indexed by 1",
+     * so a value of 1 means the crop reverts to its very frist growth stage
+     * and the largest meaningful value is growthStages.length-1.
+     */
+    growthStageAfterHarvest: number | 'random' = 1;
+
+    /* Enlarge or shrinks this.growthStages so its length matches the given number.
+     * Newly created stages will be assigned the default duration of 1000.
+     */
+    setNumberOfGrowthStages(numberOfStages: number) {
+        let oldLength = this.growthStages.length;
+        this.growthStages.length = numberOfStages;
+        this.growthStages[numberOfStages-1] = 0;
+        if(oldLength < numberOfStages) { // We added stages, must fill array
+            for(let i = oldLength; i < numberOfStages-1; i++) {
+                this.growthStages[i] = 1000;
+            }
+        }
+    }
+}
+
+// Data from the biomes that must be harvested from the source code
+export class BiomeData {
+    /* Biome-dependent humidity bonus; an integer between -10 and 10.
+     */
+    humidityBonus: number = 0;
+
+    /* Biome-dependent nutrient bonus; an integer between -10 and 10.
+     */
+    nutrientBonus: number = 0;
+}
+
 /* Stores all crop-related info that is unlikely to change
  * if the crop is being used to produce resources.
  */
 export class StaticCropData {
-    /* Tier of the crop.
-     */
-    cropTier: number = 0;
-
-    /* The three crop stats (growth, gain, resistance).
-     */
-    statGain: number = 0;
-    statGrowth: number = 0;
-    statResistance: number = 0;
-
-    /* Biome-dependent humidity bonus; an integer between -10 and 10.
-     */
-    biomeHumidityBonus: number = 0;
+    stat: CropStats = new CropStats();
+    crop: CropData = new CropData();
+    biome: BiomeData = new BiomeData();
 
     /* Whether the crop sits atop hydrated farmland or not.
      *
@@ -36,10 +106,6 @@ export class StaticCropData {
      * and if it is false the water storage is always considered to be 0.
      */
     hydrated: boolean = false;
-
-    /* Biome-dependent nutrient bonus; an integer between -10 and 10.
-     */
-    biomeNutrientBonus: number = 0;
 
     /* Number of dirt blocks underneath the crop,
      * _ignoring_ the block immediately below it.
@@ -80,69 +146,14 @@ export class StaticCropData {
      */
     skyAccess: boolean = false;
 
-    /* Weighting of each of the three environmental values.
-     * These numbers may be fractional and negative and don't need to sum to 3.
-     */
-    humidityWeight: number = 1;
-    nutrientsWeight: number = 1;
-    airQualityWeight: number = 1;
-
-    /* The duration of each growth stage.
-     * Crops don't grow in the very last growth stage,
-     * so growthStages[growthStages.length-1] is assumed to be 0.
-     *
-     * In the code (and in most places providing documentation),
-     * the growth stages are indexed by 1,
-     * whereas this list is indexed by zero.
-     * So, for example,
-     * the growth stage durations for the essence berry would be [500, 3000, 3000, 0].
-     */
-    growthStages: number[] = [1000, 1000, 1000, 0];
-
-    /* The "gain factor" is the return value of CropCard.dropGainChance(),
-     * and is used to increase or decrease the average number of drops.
-     *
-     * May be above 1 (e.g. SaltyRoot's is 4).
-     * Defaults to 0.95 ** cropTier.
-     */
-    gainFactor: number = 1;
-    setDefaultGainFactor() {
-        this.gainFactor = Math.pow(0.95, this.cropTier);
-    }
-
-    /* Growth stage that the crop goes to after harvest.
-     *
-     * Some crops (notably Stickreed) transition to some random stage except the last one;
-     * for these crops, this attribute reads 'random'.
-     *
-     * This field is "indexed by 1",
-     * so a value of 1 means the crop reverts to its very frist growth stage
-     * and the largest meaningful value is growthStages.length-1.
-     */
-    growthStageAfterHarvest: number | 'random' = 1;
-
-    /* Enlarge or shrinks this.growthStages so its length matches the given number.
-     * Newly created stages will be assigned the default duration of 1000.
-     */
-    setNumberOfGrowthStages(numberOfStages: number) {
-        let oldLength = this.growthStages.length;
-        this.growthStages.length = numberOfStages;
-        this.growthStages[numberOfStages-1] = 0;
-        if(oldLength < numberOfStages) { // We added stages, must fill array
-            for(let i = oldLength; i < numberOfStages-1; i++) {
-                this.growthStages[i] = 1000;
-            }
-        }
-    }
-
     computeEnvironmentalNeeds() {
-        return 4 * (this.cropTier-1) + this.statGrowth + this.statGain + this.statResistance;
+        return 4 * (this.crop.tier-1) + this.stat.growth + this.stat.gain + this.stat.resistance;
     }
 
     computeHumidity() {
         let farmlandBonus = this.atopHydratedFarmland ? 2 : 0;
         let hydrationBonus = this.hydrated ? 10 : 0;
-        return this.biomeHumidityBonus + farmlandBonus + hydrationBonus;
+        return this.biome.humidityBonus + farmlandBonus + hydrationBonus;
     }
 
     /* The nutrient storage fluctuates over the lifetime of the crop,
@@ -150,7 +161,7 @@ export class StaticCropData {
      */
     computeNutrients(nutrientStorage: number) {
         let storageBonus = Math.ceil(nutrientStorage/20);
-        return this.biomeNutrientBonus + this.dirtBlocksUnderneath + storageBonus;
+        return this.biome.nutrientBonus + this.dirtBlocksUnderneath + storageBonus;
     }
 
     computeAirQuality() {
@@ -163,9 +174,9 @@ export class StaticCropData {
     }
 
     computeEnvironmentalValue(nutrientStorage: number) {
-        return 5 * Math.floor(this.humidityWeight * this.computeHumidity() +
-                this.nutrientsWeight * this.computeNutrients(nutrientStorage) +
-                this.airQualityWeight * this.computeAirQuality());
+        return 5 * Math.floor(this.crop.humidityWeight * this.computeHumidity() +
+                this.crop.nutrientsWeight * this.computeNutrients(nutrientStorage) +
+                this.crop.airQualityWeight * this.computeAirQuality());
     }
 
     /* Computes a list of pairs [gainedPoints, probability]
@@ -183,7 +194,7 @@ export class StaticCropData {
         let envValue = this.computeEnvironmentalValue(nutrientStorage);
 
         if(envNeeds - envValue > 25) {
-            if(this.statResistance == 31) {
+            if(this.stat.resistance == 31) {
                 // Crop does not die, but does not grow either
                 return [[0, 1]];
             } else {
@@ -194,8 +205,8 @@ export class StaticCropData {
 
         let ret: WeightList<number> = [];
 
-        let baseMin = 3 + this.statGrowth;
-        let baseMax = 3 + 6 + this.statGrowth;
+        let baseMin = 3 + this.stat.growth;
+        let baseMax = 3 + 6 + this.stat.growth;
 
         for(let i = baseMin; i <= baseMax; i++) {
             let growth = Math.floor(i * (100 + envValue - envNeeds) / 100);
@@ -270,38 +281,38 @@ export class StaticCropData {
     }
 
     computeExpectedTicksBetweenHarvests(): number {
-        let expectedTicks = new Array<number>(this.growthStages.length - 1);
-        for(let i = 0; i < this.growthStages.length - 1; i++) {
+        let expectedTicks = new Array<number>(this.crop.growthStages.length - 1);
+        for(let i = 0; i < this.crop.growthStages.length - 1; i++) {
             if(this.fertilized) {
                 expectedTicks[i] = StaticCropData.computeExpectedStepsInGrowthStage(
-                    this.growthStages[i]!, this.computeAverageGrowthPointsWithNutrition()
+                    this.crop.growthStages[i]!, this.computeAverageGrowthPointsWithNutrition()
                 );
             } else {
                 expectedTicks[i] = StaticCropData.computeExpectedStepsInGrowthStage(
-                    this.growthStages[i]!, this.computeGainedGrowthPoints(0)
+                    this.crop.growthStages[i]!, this.computeGainedGrowthPoints(0)
                 );
             }
         }
 
-        let expectancySum = new Array<number>(this.growthStages.length);
-        expectancySum[this.growthStages.length-1] = 0;
-        for(let i = this.growthStages.length-2; i >= 0; i--) {
+        let expectancySum = new Array<number>(this.crop.growthStages.length);
+        expectancySum[this.crop.growthStages.length-1] = 0;
+        for(let i = this.crop.growthStages.length-2; i >= 0; i--) {
             expectancySum[i] = expectancySum[i+1]! + expectedTicks[i]!;
         }
 
-        if(typeof(this.growthStageAfterHarvest) === 'number') {
-            return expectancySum[this.growthStageAfterHarvest-1]!;
+        if(typeof(this.crop.growthStageAfterHarvest) === 'number') {
+            return expectancySum[this.crop.growthStageAfterHarvest-1]!;
         } else {
             let sum = 0;
-            for(let i = 0; i < this.growthStages.length-1; i++) {
+            for(let i = 0; i < this.crop.growthStages.length-1; i++) {
                 sum += expectancySum[i]!;
             }
-            return sum / (this.growthStages.length-1);
+            return sum / (this.crop.growthStages.length-1);
         }
     }
 
     computeDropCountDistribution(): WeightList<number> {
-        let baseChance = this.gainFactor * Math.pow(1.03, this.statGain);
+        let baseChance = this.crop.gainFactor * Math.pow(1.03, this.stat.gain);
         /* The number of drops is calculated by the formula
          *  round(baseChance * (1 + 0.6827 * g))
          * where g is a random gaussian variable (mean=0, variance=1).

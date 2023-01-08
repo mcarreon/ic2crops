@@ -88,25 +88,25 @@ export class UI {
 
     private constructor() {
         this.registerNumericAttributeCallback(this.cropTierInput, value => {
-            this.staticCropData.cropTier = value;
-            this.staticCropData.setDefaultGainFactor();
-            this.gainFactorInput.valueAsNumber = this.staticCropData.gainFactor;
+            this.staticCropData.crop.tier = value;
+            this.staticCropData.crop.setDefaultGainFactor();
+            this.gainFactorInput.valueAsNumber = this.staticCropData.crop.gainFactor;
         });
 
         this.registerNumericAttributeCallback(this.statGainInput, value => {
-            this.staticCropData.statGain = value;
+            this.staticCropData.stat.gain = value;
         });
 
         this.registerNumericAttributeCallback(this.statGrowthInput, value => {
-            this.staticCropData.statGrowth = value;
+            this.staticCropData.stat.growth = value;
         });
 
         this.registerNumericAttributeCallback(this.statResistanceInput, value => {
-            this.staticCropData.statResistance = value;
+            this.staticCropData.stat.resistance = value;
         });
 
         this.registerNumericAttributeCallback(this.biomeHumidityBonusInput, value => {
-            this.staticCropData.biomeHumidityBonus = value;
+            this.staticCropData.biome.humidityBonus = value;
         });
 
         this.registerBooleanAttributeCallback(this.hydratedInput, value => {
@@ -118,7 +118,7 @@ export class UI {
         });
 
         this.registerNumericAttributeCallback(this.biomeNutrientBonusInput, value => {
-            this.staticCropData.biomeNutrientBonus = value;
+            this.staticCropData.biome.nutrientBonus = value;
         });
 
         this.registerNumericAttributeCallback(this.dirtBlocksUnderneathInput, value => {
@@ -146,15 +146,15 @@ export class UI {
         });
 
         this.registerNumericAttributeCallback(this.humidityWeightInput, value => {
-            this.staticCropData.humidityWeight = value;
+            this.staticCropData.crop.humidityWeight = value;
         });
 
         this.registerNumericAttributeCallback(this.nutrientsWeightInput, value => {
-            this.staticCropData.nutrientsWeight = value;
+            this.staticCropData.crop.nutrientsWeight = value;
         });
 
         this.registerNumericAttributeCallback(this.airQualityWeightInput, value => {
-            this.staticCropData.airQualityWeight = value;
+            this.staticCropData.crop.airQualityWeight = value;
         });
 
         this.registerNumericAttributeCallback(this.numberOfGrowthStagesInput, newNumber => {
@@ -163,23 +163,23 @@ export class UI {
         });
 
         this.registerNumericAttributeCallback(this.growthStageAfterHarvestInput, newStage => {
-            this.staticCropData.growthStageAfterHarvest = newStage;
+            this.staticCropData.crop.growthStageAfterHarvest = newStage;
         })
 
         this.registerBooleanAttributeCallback(this.randomGrowthStageAfterHarvestInput, random => {
             if(random) {
-                this.staticCropData.growthStageAfterHarvest = 'random';
+                this.staticCropData.crop.growthStageAfterHarvest = 'random';
                 this.growthStageAfterHarvestInput.required = false;
                 this.growthStageAfterHarvestInput.disabled = true;
             } else {
-                this.staticCropData.growthStageAfterHarvest = this.growthStageAfterHarvestInput.valueAsNumber;
+                this.staticCropData.crop.growthStageAfterHarvest = this.growthStageAfterHarvestInput.valueAsNumber;
                 this.growthStageAfterHarvestInput.required = true;
                 this.growthStageAfterHarvestInput.disabled = false;
             }
         })
 
         this.registerNumericAttributeCallback(this.gainFactorInput, value => {
-            this.staticCropData.gainFactor = value;
+            this.staticCropData.crop.gainFactor = value;
         })
 
         /* The this.register functions call the callback with the current values upon registering,
@@ -210,11 +210,11 @@ export class UI {
 
     private setNumberOfGrowthStages(newNumber: number) {
         if(!(newNumber > 0)) return;
-        this.staticCropData.setNumberOfGrowthStages(newNumber);
+        this.staticCropData.crop.setNumberOfGrowthStages(newNumber);
         while(this.growthStageInputs.length < newNumber-1) {
             let index = this.growthStageInputs.length;
             let newGrowthStageInput = new GrowthStageInput(index, (value: number) => {
-                this.staticCropData.growthStages[index] = value;
+                this.staticCropData.crop.growthStages[index] = value;
                 this.updateCropData();
             });
             this.growthStageInputs.push(newGrowthStageInput);
@@ -284,9 +284,9 @@ export class UI {
                 "Not enough environmental resources, the crop will die in the long run.";
         } else {
             this.growthStagesExpectanciesDiv.textContent = "";
-            for(let i = 0; i < this.staticCropData.growthStages.length - 1; i++) {
+            for(let i = 0; i < this.staticCropData.crop.growthStages.length - 1; i++) {
                 let expectancy = StaticCropData.computeExpectedStepsInGrowthStage(
-                        this.staticCropData.growthStages[i]!, growthPoints
+                        this.staticCropData.crop.growthStages[i]!, growthPoints
                 );
                 let e = expectancy.toFixed(2);
                 this.growthStagesExpectanciesDiv.textContent += `[${i}: ${e} steps] `;
