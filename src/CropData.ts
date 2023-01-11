@@ -82,6 +82,11 @@ export class CropData {
      */
     minimumHarvestSize: number = 3;
 
+    /* Growth stage at which the crop can produce descendants through crossbreeding.
+     * 'never' is a special value for the Primordial Berry, which is never mature enough.
+     */
+    minimumCrossSize: number | 'never' = 3;
+
     attributeChemical: number = 0;
     attributeFood: number = 0;
     attributeDefensive: number = 0;
@@ -182,6 +187,7 @@ function makeGTCrop({
         ...makeDefaultCrop({name, tier, maxSize}),
         growthStageAfterHarvest,
         minimumHarvestSize,
+        minimumCrossSize: maxSize - 1,
         attributeChemical,
         attributeFood,
         attributeDefensive,
