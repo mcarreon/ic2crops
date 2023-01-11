@@ -94,6 +94,12 @@ export class CropData {
     attributeWeed: number = 0;
     attributes: string[] = [];
 
+    /* Some crops require a block to be placed underneath the farmland
+     * in order to fully mature and drop resources.
+     * This is the name of that block, or "" if no block is needed.
+     */
+    foundationBlock: string = "";
+
     /* List of possible item drops,
      * with corresponding weights.
      *
@@ -165,6 +171,7 @@ function makeGTCrop({
     attributeColor = 4,
     attributeWeed = 0,
     attributes = [] as string[],
+    foundationBlock = "",
     defaultDrop = "drop",
     specialDrops = [] as string[],
 }): CropData
@@ -194,6 +201,7 @@ function makeGTCrop({
         attributeColor,
         attributeWeed,
         attributes,
+        foundationBlock,
         possibleDrops,
     };
 }
@@ -271,6 +279,7 @@ CropData.registerCrop(makeGTCrop({
     attributeColor: 2,
     attributeWeed: 10,
     attributes: ["Fire", "Shiny", "Reed", "Coal", "Diamond", "Crystal"],
+    foundationBlock: "Diamond Block or Diamond Ore",
     defaultDrop: "Diamond Dust",
     specialDrops: ["Diamond"],
 }));
@@ -287,6 +296,7 @@ CropData.registerCrop(makeGTCrop({
     attributeColor: 1,
     attributeWeed: 3,
     attributes: ["Fire", "Undead", "Reed", "Coal", "Rotten", "Wither"],
+    foundationBlock: "Coal Block or Coal Ore",
     defaultDrop: "Coal Dust",
     specialDrops: ["Coal"],
 }));
@@ -473,6 +483,7 @@ CropData.registerCrop(makeGTCrop({
     attributeColor: 0,
     attributeWeed: 0,
     attributes: ["Shiny", "Metal", "Pine", "Tin", "Bush"],
+    foundationBlock: "Tin Block or Tin Ore",
     defaultDrop: "Tine Twig",
 }));
 
@@ -488,6 +499,7 @@ CropData.registerCrop(makeGTCrop({
     attributeColor: 1,
     attributeWeed: 1,
     attributes: ["Shiny", "Metal", "Cotton", "Copper", "Bush"],
+    foundationBlock: "Copper Block or Copper Ore",
     defaultDrop: "Coppon Fiber",
 }));
 
@@ -533,6 +545,7 @@ CropData.registerCrop(makeGTCrop({
     attributeColor: 0,
     attributeWeed: 0,
     attributes: ["Shiny", "Metal", "Silver", "Reed"],
+    foundationBlock: "Silver Block or Silver Ore",
     defaultDrop: "Argentia Leaf",
 }));
 
@@ -548,6 +561,7 @@ CropData.registerCrop(makeGTCrop({
     attributeColor: 1,
     attributeWeed: 1,
     attributes: ["Heavy", "Metal", "Lead", "Reed"],
+    foundationBlock: "Lead Block or Lead Ore",
     defaultDrop: "Plumbilia Leaf",
 }));
 
@@ -611,6 +625,7 @@ CropData.registerCrop(makeGTCrop({
     attributeColor: 7,
     attributeWeed: 4,
     attributes: ["Shiny", "Bad", "Crystal", "Lapis"],
+    foundationBlock: "Lapis Lazuli Block or Lapis Lazuli Ore",
     defaultDrop: "Lapis Dust",
 }));
 
@@ -657,6 +672,7 @@ CropData.registerCrop(makeGTCrop({
     attributeColor: 3,
     attributeWeed: 3,
     attributes: ["Metal", "Aluminium", "Reed", "Aluminium"],
+    foundationBlock: "Aluminium Block or Aluminium Ore",
     defaultDrop: "Bauxia Leaf",
 }));
 
@@ -672,6 +688,7 @@ CropData.registerCrop(makeGTCrop({
     attributeColor: 3,
     attributeWeed: 1,
     attributes: ["Metal", "Heavy", "Reed", "Titanium"],
+    foundationBlock: "Titanium Block or Titanium Ore",
     defaultDrop: "Titania Leaf",
 }));
 
@@ -687,6 +704,7 @@ CropData.registerCrop(makeGTCrop({
     attributeColor: 2,
     attributeWeed: 1,
     attributes: ["Radioactive", "Metal", "Danger", "Uranium"],
+    foundationBlock: "Uranium Block or Uranium Ore",
     defaultDrop: "Reactoria Leaf",
     specialDrops: ["Uranium Leaf"],
 }));
@@ -703,6 +721,7 @@ CropData.registerCrop(makeGTCrop({
     attributeColor: 1,
     attributeWeed: 2,
     attributes: ["Radioactive", "Metal", "Coal", "Thorium"],
+    foundationBlock: "Thorium Block or Thorium Ore",
     defaultDrop: "Thunder Leaf",
 }));
 
@@ -734,6 +753,7 @@ CropData.registerCrop(makeGTCrop({
     attributeColor: 1,
     attributeWeed: 0,
     attributes: ["Wither", "Nether", "Undead", "Netherstar"],
+    foundationBlock: "Nether Star Block or Nether Star Ore",
     defaultDrop: "Coal Dust",
     specialDrops: [
         "Coal",
@@ -771,6 +791,7 @@ CropData.registerCrop(makeGTCrop({
     attributeColor: 2,
     attributeWeed: 2,
     attributes: ["Metal", "Fire", "Alloy"],
+    foundationBlock: "Nickel Block or Nickel Ore",
     defaultDrop: "Nickelback Leaf",
 }));
 
@@ -786,6 +807,7 @@ CropData.registerCrop(makeGTCrop({
     attributeColor: 2,
     attributeWeed: 3,
     attributes: ["Metal", "Alloy", "Bush"],
+    foundationBlock: "Zinc Block or Zinc Ore",
     defaultDrop: "Galvania Leaf",
 }));
 
@@ -817,6 +839,7 @@ CropData.registerCrop(makeGTCrop({
     attributeColor: 4,
     attributeWeed: 0,
     attributes: ["Crystal", "Shiny", "Processing", "Olivine"],
+    foundationBlock: "Olivine Block or Olivine Ore",
     defaultDrop: "Olivine Dust",
     specialDrops: ["Olivine"],
 }));
@@ -833,6 +856,7 @@ CropData.registerCrop(makeGTCrop({
     attributeColor: 5,
     attributeWeed: 0,
     attributes: ["Crystal", "Shiny", "Metal", "Sapphire"],
+    foundationBlock: "Sapphire Block or Sapphire Ore",
     defaultDrop: "Sapphire Dust",
     specialDrops: ["Sapphire"],
 }));
@@ -849,6 +873,7 @@ CropData.registerCrop(makeGTCrop({
     attributeColor: 1,
     attributeWeed: 0,
     attributes: ["Metal", "Clean", "Bush", "Manganese"],
+    foundationBlock: "Manganese Block or Manganese Ore",
     defaultDrop: "Pyrolusium Leaf",
 }));
 
@@ -864,6 +889,7 @@ CropData.registerCrop(makeGTCrop({
     attributeColor: 1,
     attributeWeed: 0,
     attributes: ["Metal", "Hard", "Bush", "Tungsten"],
+    foundationBlock: "Tungsten Block or Tungsten Ore",
     defaultDrop: "Scheelinium Leaf",
 }));
 
@@ -879,6 +905,7 @@ CropData.registerCrop(makeGTCrop({
     attributeColor: 3,
     attributeWeed: 0,
     attributes: ["Metal", "Shiny", "Reed", "Platinum"],
+    foundationBlock: "Platinum Block or Platinum Ore",
     defaultDrop: "Platina Leaf",
 }));
 
@@ -894,6 +921,7 @@ CropData.registerCrop(makeGTCrop({
     attributeColor: 1,
     attributeWeed: 0,
     attributes: ["Metal", "Iridium", "Reed"],
+    foundationBlock: "Iridium Block or Iridium Ore",
     defaultDrop: "Quantaria Leaf (Iridium)",
     specialDrops: ["Quantaria Leaf (Osmium)"],
 }));
@@ -910,6 +938,7 @@ CropData.registerCrop(makeGTCrop({
     attributeColor: 2,
     attributeWeed: 0,
     attributes: ["Metal", "Heavy", "Alien", "Naquadah"],
+    foundationBlock: "Naquadah Block or Naquadah Ore",
     defaultDrop: "Endstone Dust",
     specialDrops: ["Stargatium Leaf"],
 }));
@@ -1047,5 +1076,6 @@ CropData.registerCrop(makeGTCrop({
     attributeColor: 0,
     attributeWeed: 0,
     attributes: ["Metal", "Pine", "Mica", "Bush"],
+    foundationBlock: "Mica Ore",
     defaultDrop: "Micadia Twig",
 }));
