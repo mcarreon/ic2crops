@@ -91,6 +91,9 @@ export class UI {
     private expectedTicksBetweenHarvestsDiv = document.getElementById('expectedTicksBetweenHarvests') as HTMLDivElement;
     private dropNumberDistributionDiv = document.getElementById('dropNumberDistribution') as HTMLDivElement;
 
+    private dropsPerHarvestDiv = document.getElementById('dropsPerHarvest') as HTMLDivElement;
+    private dropsPerHourDiv = document.getElementById('dropsPerHour') as HTMLDivElement;
+
     private staticCropData = new StaticCropData();
 
     private constructor() {
@@ -300,6 +303,7 @@ export class UI {
             this.staticCropData.computeExpectedTicksBetweenHarvests().toFixed(2) + " ticks";
 
         this.updateDropNumberDistribution();
+        this.updateDropsPerPeriod();
     }
 
     updateGrowthPointsProbabilities() {
@@ -360,6 +364,20 @@ export class UI {
                 p = probability.toExponential(3);
             }
             this.dropNumberDistributionDiv.textContent += `[${value}: ${p}] `;
+        }
+    }
+
+    updateDropsPerPeriod() {
+        this.dropsPerHarvestDiv.textContent = "";
+        this.dropsPerHourDiv.textContent = "";
+        let averageDropsPerHarvest = this.staticCropData.computeAverageItemsPerHarvest();
+        let meanTimeBetweenHarvests = this.staticCropData.computeExpectedTicksBetweenHarvests();
+        for(let [item, count] of averageDropsPerHarvest) {
+            let c = count.toFixed(4);
+            this.dropsPerHarvestDiv.textContent += `[${item}: ${c}] `;
+            let perHour = count / meanTimeBetweenHarvests / 12.8 * 3600;
+            let h = perHour.toFixed(4);
+            this.dropsPerHourDiv.textContent += `[${item}: ${h}] `;
         }
     }
 }

@@ -279,4 +279,36 @@ export class StaticCropData {
         }
         return d;
     }
+
+    computeDropCountAverage() {
+        let distribution = this.computeDropCountDistribution();
+        let averageDrops = 0;
+        for(let [dropCount, probability] of distribution) {
+            averageDrops += dropCount * probability;
+        }
+        return averageDrops;
+    }
+
+    computeAverageItemsPerDrop(): [string, number][] {
+        let averageItems = new Map<string, number>();
+        for(let [[drop, count], probability] of this.crop.possibleDrops) {
+            /* If this drop is chosen,
+             * IC2 has a (this.statGain+1)/100 chance of increasing the stack size by 1
+             * before returning.
+             */
+            let partialAverage = (count + (this.stat.gain+1)/100) * probability;
+            if(averageItems.has(drop)) {
+                partialAverage += averageItems.get(drop)!;
+            }
+            averageItems.set(drop, partialAverage);
+        }
+        return Array.from(averageItems.entries());
+    }
+
+    computeAverageItemsPerHarvest(): [string, number][] {
+        let averageDropCount = this.computeDropCountAverage();
+        return this.computeAverageItemsPerDrop().map(
+            ([drop, count]) => [drop, count * averageDropCount]
+        );
+    }
 }
