@@ -9,6 +9,12 @@
 <body>
     <div class="crop-data">
         <div>
+            Crop:
+            <select id="cropList">
+                <option>Loading crops...</option>
+            </select>
+        </div>
+        <div class="attribute-from-database">
             Crop tier:
             <input type="number" id="cropTier" min="0" max="16" value="1" required />
         </div>
@@ -68,39 +74,39 @@
             <input type="checkbox" id="skyAccess" required />
         </div>
 
-        <div>
+        <div class="attribute-from-database">
             Crop's humidity weight:
             <input type="number" id="humidityWeight" step="0.05" min="-1" max="2" value="0" required />
         </div>
-        <div>
+        <div class="attribute-from-database">
             Crop's nutrients weight:
             <input type="number" id="nutrientsWeight" step="0.05" min="-1" max="2" value="0" required />
         </div>
-        <div>
+        <div class="attribute-from-database">
             Crop's air quality weight:
             <input type="number" id="airQualityWeight" step="0.05" min="-1" max="2" value="0" required />
         </div>
 
-        <div>
+        <div class="attribute-from-database">
             Number of growth stages:
             <input type="number" id="numberOfGrowthStages" min="3" max="7" value="4" required />
         </div>
         <div id="growth-stages">
             <template id="growth-stage-input">
-                <div>
+                <div class="attribute-from-database">
                     Growth stage <div class="growth-stage-index">n</div>:
                     <input type="number" step="25" min="100" max="125000" value="1000" required />
                 </div>
             </template>
         </div>
 
-        <div>
+        <div class="attribute-from-database">
             Growth stage after harvesting:
             <input type="number" id="growthStageAfterHarvest" min="1" max="5" value="3" required />
             Random?
             <input type="checkbox" id="randomGrowthStageAfterHarvest" id="fertilized" required />
         </div>
-        <div>
+        <div class="attribute-from-database">
             Gain factor:
             <input type="number" id="gainFactor" step="any" min="0" value="0.95" required />
         </div>

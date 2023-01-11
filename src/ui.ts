@@ -12,7 +12,7 @@ class GrowthStageInput {
     private indexDisplayDiv: HTMLDivElement;
     private stageInput: HTMLInputElement;
 
-    constructor(index: number, valueModificationCallback: (value: number) => void) {
+    constructor(index: number, startingValue: number, valueModificationCallback: (value: number) => void) {
         this.index = index;
         this.valueModificationCallback = valueModificationCallback;
 
@@ -20,6 +20,7 @@ class GrowthStageInput {
         this.indexDisplayDiv = this.div.querySelector('.growth-stage-index') as HTMLDivElement;
         this.stageInput = this.div.querySelector('input') as HTMLInputElement;
 
+        this.stageInput.value = "" + startingValue;
         this.indexDisplayDiv.textContent = "" + (this.index+1);
         this.stageInput.addEventListener('input', (e: Event) => {
             this.valueModificationCallback((e.target as HTMLInputElement).valueAsNumber);
@@ -31,18 +32,23 @@ class GrowthStageInput {
         return this.div;
     }
 
+    // Changes the value displayed in the div invoking the callback
+    setVisualValue(newValue: number) {
+        this.stageInput.value = "" + newValue;
+    }
+
     hideDiv() {
         this.div.style['display'] = 'none';
     }
 
     showDiv() {
         this.div.style['display'] = '';
-        this.valueModificationCallback(this.stageInput.valueAsNumber);
     }
 }
 
 export class UI {
     static instance = new UI();
+    private cropListSelection = document.getElementById('cropList') as HTMLSelectElement;
     private cropTierInput = document.getElementById('cropTier') as HTMLInputElement;
     private statGainInput = document.getElementById('statGain') as HTMLInputElement;
     private statGrowthInput = document.getElementById('statGrowth') as HTMLInputElement;
@@ -88,6 +94,8 @@ export class UI {
     private staticCropData = new StaticCropData();
 
     private constructor() {
+        this.initCropList();
+
         this.registerNumericAttributeCallback(this.cropTierInput, value => {
             this.staticCropData.crop.tier = value;
             this.staticCropData.crop.gainFactor = CropData.defaultGainFactor(value);
@@ -190,6 +198,51 @@ export class UI {
         this.updateCropData();
     }
 
+    private initCropList() {
+        this.cropListSelection.innerHTML = "";
+        for(let key of CropData.allCrops.keys()) {
+            let option = document.createElement('option');
+            option.textContent = key;
+            this.cropListSelection.appendChild(option);
+        }
+        this.cropListSelection.addEventListener('change', (e: Event) => {
+            let cropName = (e.target as HTMLSelectElement).value;
+            let crop = CropData.allCrops.get(cropName);
+            if(crop === undefined) {
+                console.log(`Error: cannot find crop ${cropName}`);
+                return;
+            }
+
+            this.staticCropData.crop = JSON.parse(JSON.stringify(crop)); // Quick deep clone
+            this.cropTierInput.value = "" + crop.tier;
+            this.humidityWeightInput.value = "" + crop.humidityWeight;
+            this.nutrientsWeightInput.value = "" + crop.nutrientsWeight;
+            this.airQualityWeightInput.value = "" + crop.airQualityWeight;
+
+            this.numberOfGrowthStagesInput.value = "" + crop.growthStages.length;
+            this.setNumberOfGrowthStages(crop.growthStages.length);
+            for(let i = 0; i < crop.growthStages.length - 1; i++) {
+                this.growthStageInputs[i]!.setVisualValue(crop.growthStages[i]!);
+            }
+
+            if(crop.growthStageAfterHarvest === 'random') {
+                this.growthStageAfterHarvestInput.required = false;
+                this.growthStageAfterHarvestInput.disabled = true;
+                this.randomGrowthStageAfterHarvestInput.checked = true;
+                this.growthStageAfterHarvestInput.value = "1"; // Dummy value
+            } else {
+                this.growthStageAfterHarvestInput.required = true;
+                this.growthStageAfterHarvestInput.disabled = false;
+                this.randomGrowthStageAfterHarvestInput.checked = false;
+                this.growthStageAfterHarvestInput.value = "" + crop.growthStageAfterHarvest;
+            }
+
+            this.gainFactorInput.value = "" + crop.gainFactor;
+
+            this.updateCropData();
+        });
+    }
+
     private registerNumericAttributeCallback(element: HTMLInputElement, callback: (value: number) => void) {
         element.addEventListener('input', (e: Event) => {
             callback((e.target as HTMLInputElement).valueAsNumber);
@@ -214,7 +267,8 @@ export class UI {
         CropData.setNumberOfGrowthStages(this.staticCropData.crop, newNumber);
         while(this.growthStageInputs.length < newNumber-1) {
             let index = this.growthStageInputs.length;
-            let newGrowthStageInput = new GrowthStageInput(index, (value: number) => {
+            let startingValue = this.staticCropData.crop.growthStages[index]!;
+            let newGrowthStageInput = new GrowthStageInput(index, startingValue, (value: number) => {
                 this.staticCropData.crop.growthStages[index] = value;
                 this.updateCropData();
             });
