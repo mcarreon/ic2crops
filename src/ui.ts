@@ -1,3 +1,4 @@
+import { CropData } from './CropData.js';
 import { StaticCropData } from './CropMath.js';
 
 class GrowthStageInput {
@@ -89,7 +90,7 @@ export class UI {
     private constructor() {
         this.registerNumericAttributeCallback(this.cropTierInput, value => {
             this.staticCropData.crop.tier = value;
-            this.staticCropData.crop.setDefaultGainFactor();
+            this.staticCropData.crop.gainFactor = CropData.defaultGainFactor(value);
             this.gainFactorInput.valueAsNumber = this.staticCropData.crop.gainFactor;
         });
 
@@ -210,7 +211,7 @@ export class UI {
 
     private setNumberOfGrowthStages(newNumber: number) {
         if(!(newNumber > 0)) return;
-        this.staticCropData.crop.setNumberOfGrowthStages(newNumber);
+        CropData.setNumberOfGrowthStages(this.staticCropData.crop, newNumber);
         while(this.growthStageInputs.length < newNumber-1) {
             let index = this.growthStageInputs.length;
             let newGrowthStageInput = new GrowthStageInput(index, (value: number) => {
