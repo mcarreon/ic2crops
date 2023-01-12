@@ -208,3 +208,42 @@ export function makeGTCrop({
         possibleDrops,
     };
 }
+
+/* Utility to generate CropData for a default GT++ crop.
+ */
+export function makeDefaultGTplusplusCrop({
+    name = "Unnamed Crop",
+    tier = 0,
+    growthStageDuration = 225,
+}): CropData
+{
+    /* GT++ defines the abstract classes BaseCrop, BaseHarvestableCrop extending BaseCrop,
+     * and BaseAestheticCrop extending BaseHarvestableCrop.
+     * All of its crops extend BaseHarvestableCrop,
+     * so this function mimics the data from it.
+     *
+     * The max size and weights are defined in
+     * src/main/java/gtPlusPlus/xmod/bartcrops/abstracts/BaseHarvestableCrop.java.
+     *
+     * The attributes ("stats") and growth stage after harvest are defined in
+     * src/main/java/gtPlusPlus/xmod/bartcrops/abstracts/BaseAestheticCrop.java.
+     */
+    let maxSize = 3;
+    let growthStages = Array(maxSize).fill(growthStageDuration);
+    growthStages[maxSize-1] = 0;
+
+    return {
+        ...makeDefaultCrop({name, tier, maxSize}),
+        humidityWeight: 1.2,
+        nutrientsWeight: 0.9,
+        airQualityWeight: 0.9,
+        minimumCrossSize: maxSize,
+        growthStages,
+        growthStageAfterHarvest: 1,
+        attributeChemical: 0,
+        attributeFood: 0,
+        attributeDefensive: 0,
+        attributeColor: 4,
+        attributeWeed: 0,
+    };
+}
