@@ -247,3 +247,28 @@ export function makeDefaultGTplusplusCrop({
         attributeWeed: 0,
     };
 }
+
+export function makeIC2FlowerCrop({
+    name = "",
+    attributes = [] as string[],
+    drop = "",
+}): CropData
+{
+    return {
+        ...makeDefaultCrop({
+            name,
+            tier: 2,
+            maxSize: 4,
+        }),
+        attributeChemical: 1,
+        attributeFood: 1,
+        attributeDefensive: 0,
+        attributeColor: 5,
+        attributeWeed: 1,
+        attributes,
+        minimumHarvestSize: 4,
+        possibleDrops: [[[drop, 1], 1]],
+        growthStageAfterHarvest: 3,
+        growthStages: [400, 400, 600, 0],
+    };
+}
