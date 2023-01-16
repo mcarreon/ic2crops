@@ -264,7 +264,9 @@ CropData.registerCrop({
     growthStageAfterHarvest: 2,
 });
 
-CropData.registerCrop({
+/* Last-stage potatos drop poisonous potatos.
+ */
+let cropPotato: CropData = {
     ...makeDefaultCrop({
         name: "Potato",
         tier: 2,
@@ -279,7 +281,16 @@ CropData.registerCrop({
     minimumHarvestSize: 3,
     possibleDrops: [[["Poisonous Potato", 1], 1]],
     growthStageAfterHarvest: 1,
+};
+CropData.registerCrop(cropPotato);
+CropData.registerCrop({
+    ...cropPotato,
+    variantOf: cropPotato,
+    name: "Potato (early harvest)",
+    growthStages: makeDefaultCrop({maxSize: 3}).growthStages,
+    possibleDrops: [[["Potato", 1], 1]],
 });
+
 
 CropData.registerCrop({
     ...makeDefaultCrop({
@@ -319,7 +330,10 @@ CropData.registerCrop({
     possibleDrops: [[["Red Mushroom", 1], 1]],
 });
 
-CropData.registerCrop({
+/* If the crop block is not powered by redstone,
+ * Redwheats have 50% of chance of dropping wheat instead of redstone dust.
+ */
+let cropRedWheat: CropData = {
     ...makeDefaultCrop({
         name: "Redwheat",
         tier: 6,
@@ -339,6 +353,13 @@ CropData.registerCrop({
     ],
     growthStages: [600, 600, 600, 600, 600, 600, 0],
     growthStageAfterHarvest: 2,
+};
+CropData.registerCrop(cropRedWheat);
+CropData.registerCrop({
+    ...cropRedWheat,
+    variantOf: cropRedWheat,
+    name: "Redwheat (powered by redstone)",
+    possibleDrops: [[["Redstone dust", 1], 1]],
 });
 
 CropData.registerCrop({
@@ -437,7 +458,10 @@ CropData.registerCrop({
     possibleDrops: [[['Terra Wart', 1], 1]],
 });
 
-CropData.registerCrop({
+/* Venomilias only drop grin powder on stage 5,
+ * which is the optimal harvest stage caught by IC2's crop harvester.
+ */
+let cropVenomilia: CropData = {
     ...makeDefaultCrop({
         name: "Venomilia",
         tier: 3,
@@ -453,6 +477,14 @@ CropData.registerCrop({
     possibleDrops: [[['Purple Dye', 1], 1]],
     growthStageAfterHarvest: 2,
     growthStages: [400, 400, 600, 600, 600, 0],
+};
+CropData.registerCrop(cropVenomilia);
+CropData.registerCrop({
+    ...cropVenomilia,
+    variantOf: cropVenomilia,
+    name: "Venomilia (optimal harvest)",
+    growthStages: [400, 400, 600, 600, 0],
+    possibleDrops: [[['Grin Powder', 1], 1]],
 });
 
 CropData.registerCrop({

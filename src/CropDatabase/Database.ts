@@ -7,6 +7,17 @@ import { WeightList } from '../Weights.js';
 export class CropData {
     name: string = "Unnamed Crop";
 
+    /* There are a few crops that behave differently
+     * according to when they are harvested or which block is used as a foundation.
+     * In this case,
+     * we represent this by having all the behaviors as distinct CropData.
+     * We choose one of them to be the "standard" behavior,
+     * having variantOf === null,
+     * and the others pointing to the standard behavior CropData.
+     * We use different names to distinguish between each behavior.
+     */
+    variantOf: CropData | null = null;
+
     /* Seed item.
      * If different from "",
      * it indicates that the crop can be planted using that item,
