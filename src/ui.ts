@@ -203,9 +203,10 @@ export class UI {
 
     private initCropList() {
         this.cropListSelection.innerHTML = "";
-        for(let key of CropData.allCrops.keys()) {
+        let cropNames = Array.from(CropData.allCrops.keys()).sort();
+        for(let cropName of cropNames) {
             let option = document.createElement('option');
-            option.textContent = key;
+            option.textContent = cropName;
             this.cropListSelection.appendChild(option);
         }
         this.cropListSelection.addEventListener('change', (e: Event) => {
