@@ -283,3 +283,77 @@ export function makeIC2FlowerCrop({
         growthStages: [400, 400, 600, 0],
     };
 }
+
+export function makeCppBasicCrop({
+    name = "Unnamed Crop",
+    tier = 0,
+    maxSize = 3,
+}): CropData
+{
+    let berryGain = 1; // Config value: berriespp.cfg > gain > D:"All crops"
+    return {
+        ...makeDefaultCrop({name, tier, maxSize}),
+        gainFactor: makeDefaultCrop({tier}).gainFactor * berryGain,
+        minimumCrossSize: maxSize,
+        minimumHarvestSize: maxSize,
+    };
+}
+
+export function makeCppBasicBerryCrop({
+    name = "Unnamed Crop",
+    tier = 2, // Default tier is 2
+    maxSize = 3, // Default maxSize is 3
+}): CropData
+{
+    return {
+        ...makeDefaultCrop({name, tier, maxSize}),
+        attributeChemical: 0,
+        attributeFood: 1,
+        attributeDefensive: 0,
+        attributeColor: 5,
+        attributeWeed: 0,
+        humidityWeight: 1.2,
+        nutrientsWeight: 0.9,
+        airQualityWeight: 0.9,
+        growthStages: [700, 200, 0],
+        growthStageAfterHarvest: 2,
+    };
+}
+
+export function makeCppBasicDecorationCrop({
+    name = "Unnamed Crop",
+    tier = 1, // Default tier is 1
+    maxSize = 3, // Default maxSize is 3, inherited from BasicBerryCrop
+}): CropData
+{
+    let growthStages = Array(maxSize).fill(225);
+    growthStages[maxSize-1] = 0;
+    return {
+        ...makeCppBasicBerryCrop({name, tier, maxSize}),
+        attributeChemical: 0,
+        attributeFood: 0,
+        attributeDefensive: 0,
+        attributeColor: 4,
+        attributeWeed: 0,
+        growthStages,
+        growthStageAfterHarvest: 1,
+    };
+}
+
+export function makeCppBasicFoodCrop({
+    name = "Unnamed Crop",
+    tier = 2, // Default tier is 2
+    maxSize = 3, // Default maxSize is 3,
+}): CropData
+{
+    return {
+        ...makeCppBasicDecorationCrop({name, tier, maxSize}),
+        attributeChemical: 0,
+        attributeFood: 4,
+        attributeDefensive: 0,
+        attributeColor: 0,
+        attributeWeed: 2,
+        minimumHarvestSize: 3,
+        growthStageAfterHarvest: 1,
+    };
+}
