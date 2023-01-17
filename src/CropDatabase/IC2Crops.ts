@@ -287,7 +287,7 @@ CropData.registerCrop({
     ...cropPotato,
     variantOf: cropPotato,
     name: "Potato (early harvest)",
-    growthStages: makeDefaultCrop({maxSize: 3}).growthStages,
+    growthStages: makeDefaultCrop({tier: 2, maxSize: 3}).growthStages,
     possibleDrops: [[["Potato", 1], 1]],
 });
 
