@@ -357,3 +357,31 @@ export function makeCppBasicFoodCrop({
         growthStageAfterHarvest: 1,
     };
 }
+
+export function makeCppBasicTinkerBerryCrop({
+    name = "Unnamed Crop",
+    tier = 5, // Default tier is 5
+    maxSize = 4, // Default maxSize is 4,
+}): CropData
+{
+    let tcBerryGain = 1; // Config value: berriespp.cfg > gain > D:"Tinker's Construct berries"
+    let gainFactor = Math.pow(0.95, tier) * tcBerryGain;
+    return {
+        ...makeCppBasicCrop({
+            name,
+            tier,
+            maxSize,
+        }),
+        gainFactor,
+        attributeChemical: 3,
+        attributeFood: 0,
+        attributeDefensive: 4,
+        attributeColor: 1,
+        attributeWeed: 0,
+        minimumHarvestSize: 3,
+        humidityWeight: 0.5,
+        nutrientsWeight: 1.5,
+        airQualityWeight: 1.0,
+        growthStageAfterHarvest: 2,
+    }
+}
