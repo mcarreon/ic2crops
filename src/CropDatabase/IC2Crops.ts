@@ -505,7 +505,7 @@ CropData.registerCrop({
 
 CropData.registerCrop({
     ...makeDefaultCrop({
-        name: "Redwheat",
+        name: "Wheat",
         tier: 1,
         maxSize: 7,
     }),
