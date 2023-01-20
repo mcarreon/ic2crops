@@ -298,7 +298,7 @@ CropData.registerCrop(makeGTCrop({
 }));
 
 CropData.registerCrop(makeGTCrop({
-    name: "Brown Mushrooms",
+    name: "Brown Mushrooms (GT)",
     tier: 1,
     maxSize: 3,
     growthStageAfterHarvest: 1,
@@ -313,7 +313,7 @@ CropData.registerCrop(makeGTCrop({
 }));
 
 CropData.registerCrop(makeGTCrop({
-    name: "Red Mushrooms",
+    name: "Red Mushrooms (GT)",
     tier: 1,
     maxSize: 3,
     growthStageAfterHarvest: 1,

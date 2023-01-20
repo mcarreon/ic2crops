@@ -52,7 +52,7 @@ CropData.registerCrop({
 
 CropData.registerCrop({
     ...makeDefaultCrop({
-        name: "Brown Mushroom",
+        name: "Brown Mushroom (IC2)",
         tier: 2,
         maxSize: 3,
     }),
@@ -315,7 +315,7 @@ CropData.registerCrop({
 
 CropData.registerCrop({
     ...makeDefaultCrop({
-        name: "Red Mushroom",
+        name: "Red Mushroom (IC2)",
         tier: 2,
         maxSize: 3,
     }),
