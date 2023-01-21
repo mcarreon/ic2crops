@@ -95,7 +95,8 @@ CropData.registerCrop(makeBonsai({treeName: "Jungle"}));
 CropData.registerCrop(makeBonsai({treeName: "Acacia"}));
 CropData.registerCrop(makeBonsai({treeName: "Dark Oak"}));
 
-let cactusCrop: CropData = {
+// Extended by Saguaro Crop
+export let cactusCrop: CropData = {
     ...makeCppBasicDecorationCrop({
         name: "Cactus",
         tier: 3,

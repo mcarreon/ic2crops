@@ -385,3 +385,22 @@ export function makeCppBasicTinkerBerryCrop({
         growthStageAfterHarvest: 2,
     }
 }
+
+export function makeCppBasicNetherBerryCrop({
+    name = "Unnamed Crop",
+    tier = 4,
+}): CropData
+{
+    return {
+        ...makeCppBasicBerryCrop({name, tier}),
+        attributeChemical: 1,
+        attributeFood: 3,
+        attributeDefensive: 4,
+        attributeColor: 4,
+        attributeWeed: 0,
+        humidityWeight: 0.5,
+        nutrientsWeight: 1.5,
+        airQualityWeight: 1.0,
+        growthStages: [700, 300, 0],
+    };
+}
