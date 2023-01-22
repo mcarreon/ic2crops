@@ -404,3 +404,20 @@ export function makeCppBasicNetherBerryCrop({
         growthStages: [700, 300, 0],
     };
 }
+
+export function makeCppBasicThaumcraftCrop({
+    name = "Unnamed Crop",
+    tier = 4,
+}): CropData
+{
+    return {
+        ...makeCppBasicCrop({name, tier}),
+        growthStages: [1800, 2200, 0],
+        attributeChemical: 2,
+        attributeFood: 0,
+        attributeDefensive: 0,
+        attributeColor: 2,
+        attributeWeed: 0,
+        minimumHarvestSize: 3,
+    }
+}
