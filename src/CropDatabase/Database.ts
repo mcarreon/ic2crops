@@ -421,3 +421,17 @@ export function makeCppBasicThaumcraftCrop({
         minimumHarvestSize: 3,
     }
 }
+
+export function makeCppBasicWitcheryCrop({
+    name = "Unnamed Crop",
+    tier = 4,
+    maxSize = 3, // Default maxSize is 3, inherited from BasicDecorationCrop
+}): CropData
+{
+    let growthStages = Array(maxSize).fill(550);
+    growthStages[maxSize-1] = 0;
+    return {
+        ...makeCppBasicDecorationCrop({name, tier}),
+        growthStages,
+    }
+}

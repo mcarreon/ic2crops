@@ -8,6 +8,7 @@ import './CropDatabase/CropsPlusPlusNaturaNetherCrops.js';
 import './CropDatabase/CropsPlusPlusTCCrops.js';
 import './CropDatabase/CropsPlusPlusTConstructCrops.js';
 import './CropDatabase/CropsPlusPlusTFCrops.js';
+import './CropDatabase/CropsPlusPlusWitcheryCrops.js';
 import './CropDatabase/GoodGeneratorCrops.js';
 import './CropDatabase/GregTechCrops.js';
 import './CropDatabase/GTplusplusCrops.js';
