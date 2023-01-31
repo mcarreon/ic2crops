@@ -8,8 +8,9 @@ export class CropStats {
     growth: number = 0;
     resistance: number = 0;
 }
+
 // Data from the biomes that must be harvested from the source code
-export class BiomeData {
+export class BiomeBonuses {
     /* Biome-dependent humidity bonus; an integer between -10 and 10.
      */
     humidityBonus: number = 0;
@@ -25,7 +26,7 @@ export class BiomeData {
 export class StaticCropData {
     stat: CropStats = new CropStats();
     crop: CropData = new CropData();
-    biome: BiomeData = new BiomeData();
+    biome: BiomeBonuses = new BiomeBonuses();
 
     /* Whether the crop sits atop hydrated farmland or not.
      *
