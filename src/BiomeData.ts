@@ -1,3 +1,5 @@
+import { BiomeBonuses } from './CropMath.js';
+
 export class BiomeData {
     /* Internal biome ID.
      */
@@ -74,6 +76,22 @@ export class BiomeData {
         ["WASTELAND", -5],
         ["BEACH", 6],
     ]);
+
+    static computeBiomeBonuses(biome: BiomeData): BiomeBonuses {
+        let nutrientBonus = 0;
+        for(let type of biome.types) {
+            if(BiomeData.nutrientBonus.has(type)) {
+                nutrientBonus = Math.max(nutrientBonus, BiomeData.nutrientBonus.get(type)!);
+            }
+        }
+        let humidityBonus = 0;
+        for(let type of biome.types) {
+            if(BiomeData.humidityBonus.has(type)) {
+                humidityBonus = Math.max(humidityBonus, BiomeData.humidityBonus.get(type)!);
+            }
+        }
+        return {nutrientBonus, humidityBonus};
+    }
 };
 
 function registerBiomes(biomes: BiomeData[]) {
