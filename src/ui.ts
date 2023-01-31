@@ -1,4 +1,5 @@
 import { CropData } from './CropData.js';
+import { BiomeData } from './BiomeData.js';
 import { StaticCropData } from './CropMath.js';
 
 class GrowthStageInput {
@@ -49,6 +50,7 @@ class GrowthStageInput {
 export class UI {
     static instance = new UI();
     private cropListSelection = document.getElementById('cropList') as HTMLSelectElement;
+    private biomeListSelection = document.getElementById('biomeList') as HTMLSelectElement;
     private cropTierInput = document.getElementById('cropTier') as HTMLInputElement;
     private statGainInput = document.getElementById('statGain') as HTMLInputElement;
     private statGrowthInput = document.getElementById('statGrowth') as HTMLInputElement;
@@ -98,6 +100,7 @@ export class UI {
 
     private constructor() {
         this.initCropList();
+        this.initBiomeList();
 
         this.registerNumericAttributeCallback(this.cropTierInput, value => {
             this.staticCropData.crop.tier = value;
@@ -243,6 +246,29 @@ export class UI {
 
             this.gainFactorInput.value = "" + crop.gainFactor;
 
+            this.updateCropData();
+        });
+    }
+
+    private initBiomeList() {
+        this.biomeListSelection.innerHTML = "";
+        let biomeNames = Array.from(BiomeData.allBiomes.keys()).sort();
+        for(let biomeName of biomeNames) {
+            let option = document.createElement('option');
+            option.textContent = biomeName;
+            this.biomeListSelection.appendChild(option);
+        }
+        this.biomeListSelection.addEventListener('change', (e: Event) => {
+            let biomeName = (e.target as HTMLSelectElement).value;
+            let biome = BiomeData.allBiomes.get(biomeName);
+            if(biome === undefined) {
+                console.log(`Error: cannot find biome ${biomeName}`);
+                return;
+            }
+
+            this.staticCropData.biome = BiomeData.computeBiomeBonuses(biome);
+            this.biomeHumidityBonusInput.value = "" + this.staticCropData.biome.humidityBonus;
+            this.biomeNutrientBonusInput.value = "" + this.staticCropData.biome.nutrientBonus;
             this.updateCropData();
         });
     }

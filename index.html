@@ -14,6 +14,12 @@
                 <option>Loading crops...</option>
             </select>
         </div>
+        <div>
+            Biome:
+            <select id="biomeList">
+                <option>Loading biomes...</option>
+            </select>
+        </div>
         <div class="attribute-from-database">
             Crop tier:
             <input type="number" id="cropTier" min="0" max="16" value="1" required />
@@ -31,7 +37,7 @@
             <input type="number" id="statResistance" min="0" max="31" value="1" required />
         </div>
 
-        <div>
+        <div class="attribute-from-database">
             Biome Humidity Bonus:
             <input type="number" id="biomeHumidityBonus" min="-10" max="10" value="0" required />
         </div>
@@ -44,7 +50,7 @@
             <input type="checkbox" id="atopHydratedFarmland" required />
         </div>
 
-        <div>
+        <div class="attribute-from-database">
             Biome Nutrient Bonus:
             <input type="number" id="biomeNutrientBonus" min="-10" max="10" value="0" required />
         </div>
