@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cubic-chariot/ic2crops.git"
+    "url": "git+https://github.com/mcarreon/ic2crops.git"
   },
   "keywords": [
     "ic2",
@@ -19,18 +19,18 @@
   "author": "Cubic Chariot",
   "license": "GPL-3.0-or-later",
   "bugs": {
-    "url": "https://github.com/cubic-chariot/ic2crops/issues"
+    "url": "https://github.com/mcarreon/ic2crops/issues"
   },
-  "homepage": "https://github.com/cubic-chariot/ic2crops#readme",
+  "homepage": "https://github.com/mcarreon/ic2crops#readme",
   "dependencies": {
-    "mathjs": "^11.5.0",
-    "typescript": "^4.9.4"
+    "mathjs": "^11.5.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^24.0.0",
     "@rollup/plugin-node-resolve": "^15.0.1",
     "@rollup/plugin-typescript": "^10.0.1",
     "rollup": "^3.8.0",
-    "tslib": "^2.4.1"
+    "tslib": "^2.4.1",
+    "typescript": "^5.8.3"
   }
 }
