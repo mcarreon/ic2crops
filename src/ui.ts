@@ -318,6 +318,7 @@ export class UI {
     updateCropData() {
         this.envNeedsDiv.textContent = "" + this.staticCropData.computeEnvironmentalNeeds();
         this.humidityDiv.textContent = "" + this.staticCropData.computeHumidity();
+        this.updateNutrientStorage();
         let currentNutrientStorage = this.nutrientStorageInput.valueAsNumber;
         this.nutrientDiv.textContent = "" + this.staticCropData.computeNutrients(currentNutrientStorage);
         this.airQualityDiv.textContent = "" + this.staticCropData.computeAirQuality();
@@ -331,6 +332,12 @@ export class UI {
 
         this.updateDropNumberDistribution();
         this.updateDropsPerPeriod();
+    }
+
+    updateNutrientStorage() {
+        let nutrientStorageValue;
+        nutrientStorageValue = this.staticCropData.fertilized ? 100 : 0;
+        this.nutrientStorageInput.value = String(nutrientStorageValue);
     }
 
     updateGrowthPointsProbabilities() {
